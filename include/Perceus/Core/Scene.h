@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Graphics/Rendering/Events.h"
+
 namespace pcs
 {
     // State flags for scenes
@@ -23,6 +25,8 @@ namespace pcs
     protected:
         // Change the state of the scene
         bool setState(SceneState s);
+
+        bool pollEvent(Event** event);
 
         virtual void render() = 0;
 

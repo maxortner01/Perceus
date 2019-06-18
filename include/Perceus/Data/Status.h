@@ -6,6 +6,7 @@ namespace pcs
 {
 namespace Data
 {
+
     template<class E>
     class Status
     {

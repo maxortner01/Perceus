@@ -23,6 +23,9 @@ namespace pcs
 #define PS_CORE_WARN(...)  ::pcs::Log::getCore()->warn(__VA_ARGS__)
 #define PS_CORE_ERROR(...) ::pcs::Log::getCore()->error(__VA_ARGS__)
 #define PS_CORE_TRACE(...) ::pcs::Log::getCore()->trace(__VA_ARGS__)
+#define PS_CORE_DEBUG(...) ::pcs::Log::getCore()->debug(__VA_ARGS__)
+
+#define PS_CORE_SET_LEVEL(...) ::pcs::Log::getCore()->set_level(__VA_ARGS__)
 
 // Client Logger Macros
 #define PS_CLIENT_INFO(...)  ::pcs::Log::getClient()->info(__VA_ARGS__)

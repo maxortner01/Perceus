@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Perceus/Data/Status.h"
-#include "Rendering/RenderObject.h"
 #include "Perceus/Data/Transformable.h"
+#include "Rendering/Events.h"
+#include "Rendering/RenderObject.h"
 
 namespace pcs
 {
@@ -31,7 +32,10 @@ namespace pcs
         static Window* Create(unsigned int width, unsigned int height);
 
         bool isOpen() const;
+        
         bool render();
+        bool pollEvents();
+
         bool resize(unsigned int width, unsigned int height);
 
         unsigned int getID() const { return ID; }

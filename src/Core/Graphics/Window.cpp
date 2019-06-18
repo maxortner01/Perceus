@@ -53,7 +53,13 @@ namespace pcs
     bool Window::render()
     {
         rendAPI()->clear(Color{ 0, 0, 0 });
+        rendAPI()->test();
         return rendAPI()->swapBuffers(this);
+    }
+
+    bool Window::pollEvents()
+    {
+        return rendAPI()->pollEvents(this);
     }
 
     bool Window::resize(unsigned int width, unsigned int height)

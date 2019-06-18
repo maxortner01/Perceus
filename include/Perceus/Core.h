@@ -10,3 +10,5 @@
 #include "Core/Graphics/Window.h"
 
 #include "Core/EntryPoint.h"
+
+#include "Core/Graphics/Rendering/Events.h"
