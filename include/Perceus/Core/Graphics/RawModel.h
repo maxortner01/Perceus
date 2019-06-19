@@ -8,6 +8,6 @@ namespace pcs
     class RawModel : public rend::BufferArray
     {
     public:
-        bool loadVertices(std::vector<Vec3f> vertices);
+        bool loadVertices(std::vector<float> vertices);
     };
 }

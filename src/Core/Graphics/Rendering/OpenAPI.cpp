@@ -1,7 +1,8 @@
 #include "Perceus/Core/Graphics/Rendering/Events/EventHandler.h"
 #include "Perceus/Core/Graphics/Rendering/Events.h"
 
-#include "Perceus/Core/Graphics/Rendering/BufferArray.h"
+#include "Perceus/Core/Graphics/RawModel.h"
+#include "Perceus/Core/Graphics/ForwardRenderer.h"
 #include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
 #include "Perceus/Core/Graphics/Rendering/Buffer.h"
 #include "Perceus/Core/Graphics/Window.h"
@@ -11,6 +12,7 @@
 
 #include <math.h>
 #include <iostream>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -114,21 +116,15 @@ namespace rend
     {
         static int frame;
 
-        std::vector<float> vertices = {
-            -.5f, -.5f,
-             .5f, -.5f,
-               0,  .5f
-        };
 
-        BufferArray bufferArray = BufferArray();
-        bufferArray.bindBuffer(BufferIndex::Vertices, 2, vertices);
+        //BufferArray bufferArray = BufferArray();
+        //bufferArray.bindBuffer(BufferIndex::Vertices, 2, vertices);
 
+        //bufferArray.getBuffer(BufferIndex::Vertices).bind();
 
-        bufferArray.getBuffer(BufferIndex::Vertices).bind();
+        //glDrawArrays(GL_TRIANGLES, 0, 3);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        bufferArray.getBuffer(BufferIndex::Vertices).unbind();
+        //bufferArray.getBuffer(BufferIndex::Vertices).unbind();
 
         //glBegin(GL_TRIANGLES);
 //
@@ -152,6 +148,13 @@ namespace rend
         glClear(GL_COLOR_BUFFER_BIT);
 
         return true;
+    } 
+
+    bool OpenAPI::renderArray(unsigned int vertexCount) const
+    {
+        PS_CORE_DEBUG("Rendering {0} vertices", vertexCount);
+        glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+        return true;
     }
 
     void OpenAPI::makeBuffer(Buffer* buffer) const
@@ -170,6 +173,8 @@ namespace rend
         
         if (type == BufferType::Index) t = GL_ELEMENT_ARRAY_BUFFER;
 
+        PS_CORE_DEBUG("Binding buffer {0}", ID);
+
         glBindBuffer(t, ID);
     }
 
@@ -178,6 +183,8 @@ namespace rend
         GLenum t = GL_ARRAY_BUFFER;
         
         if (type == BufferType::Index) t = GL_ELEMENT_ARRAY_BUFFER;
+
+        PS_CORE_DEBUG("Binding {0} bytes of data with {1} members to buffer {2}", bytesize, members, index);
 
         glBufferData(t, bytesize, data, GL_STATIC_DRAW);
 

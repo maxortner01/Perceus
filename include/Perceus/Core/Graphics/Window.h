@@ -33,6 +33,7 @@ namespace pcs
 
         bool isOpen();
         
+        bool clear(Color color = Color(0.f, 0.f, 0.f));
         bool render();
         bool pollEvents();
 

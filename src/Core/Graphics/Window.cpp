@@ -50,9 +50,14 @@ namespace pcs
         return !rendAPI()->shouldClose(this);
     }
 
+    bool Window::clear(Color color)
+    {
+        rendAPI()->clear(color);
+        return true;
+    }
+
     bool Window::render()
     {
-        rendAPI()->clear(Color( 1.f, 0.f, 0.f ));
         rendAPI()->test();
         return rendAPI()->swapBuffers(this);
     }

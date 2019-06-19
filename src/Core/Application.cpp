@@ -14,6 +14,9 @@ namespace pcs
 
     Application::~Application()
     {
+        for (int i = 0; i < scenes.size(); i++)
+            delete scenes[i];
+
         delete engine;
     }
 

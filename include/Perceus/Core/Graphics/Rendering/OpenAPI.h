@@ -29,6 +29,7 @@ namespace rend
 
         // RENDERING
         bool clear(Color color) const;
+        bool renderArray(unsigned int vertexCount) const;
 
         // VERTEX BUFFER OBJECTS
         void makeBuffer(Buffer* buffer) const;

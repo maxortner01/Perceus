@@ -2,9 +2,9 @@
 
 namespace pcs
 {
-    bool RawModel::loadVertices(std::vector<Vec3f> vertices)
+    bool RawModel::loadVertices(std::vector<float> vertices)
     {
-        bindBuffer(rend::BufferIndex::Vertices, 3, vertices);
+        bindBuffer(rend::BufferIndex::Vertices, 2, vertices);
         return true;
     }
 }

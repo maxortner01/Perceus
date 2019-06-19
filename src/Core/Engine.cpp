@@ -47,6 +47,7 @@ namespace pcs
         // render the scene
         EventHandler::get().clearEvents();
         window->pollEvents();
+        window->clear(Color(1.f, 0.f, 0.f));
         scene->_render();
         window->render();
 

@@ -12,3 +12,7 @@
 #include "Core/EntryPoint.h"
 
 #include "Core/Graphics/Rendering/Events.h"
+
+#include "Core/Graphics/ForwardRenderer.h"
+
+#include "Core/Graphics/Model.h"
