@@ -17,7 +17,7 @@ namespace pcs
             };
         };
 
-        explicit Color(float _r = 0.f, float _g = 0.f, float _b = 0.f, float _a = 0.f) :
+        Color(float _r = 0.f, float _g = 0.f, float _b = 0.f, float _a = 0.f) :
             r(_r), g(_g), b(_b), a(_a)
         {
 

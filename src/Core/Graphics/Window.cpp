@@ -45,14 +45,14 @@ namespace pcs
         return win;
     }
 
-    bool Window::isOpen() const
+    bool Window::isOpen()
     {
-        return !rendAPI()->shouldClose((void*)this);
+        return !rendAPI()->shouldClose(this);
     }
 
     bool Window::render()
     {
-        rendAPI()->clear(Color{ 0, 0, 0 });
+        rendAPI()->clear(Color( 1.f, 0.f, 0.f ));
         rendAPI()->test();
         return rendAPI()->swapBuffers(this);
     }

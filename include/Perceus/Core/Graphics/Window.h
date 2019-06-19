@@ -31,7 +31,7 @@ namespace pcs
 
         static Window* Create(unsigned int width, unsigned int height);
 
-        bool isOpen() const;
+        bool isOpen();
         
         bool render();
         bool pollEvents();

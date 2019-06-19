@@ -52,15 +52,16 @@ namespace pcs
 
         // Frame calculations
         {
+            int seconds = 2;
             static double totalElapsed = 0;
             double elapsed = rendAPI()->getTime() - start_time;
             totalElapsed += elapsed;
 
-            if (frame == 120)
+            if (totalElapsed >= seconds)
             {
-                float fps = 120.f / totalElapsed;
+                float fps = (float)frame / totalElapsed;
 
-                PS_CORE_DEBUG("120 frames passed with average fps of {0}", fps);
+                PS_CORE_DEBUG("{0} frames passed in {2} second(s) with an average fps of {1}", frame, fps, seconds);
 
                 frame = 0;
                 totalElapsed = 0;
