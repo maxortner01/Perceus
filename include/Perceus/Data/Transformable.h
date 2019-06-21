@@ -6,12 +6,24 @@
 namespace pcs
 {
     template<typename T>
-    class Transformable2D : public Sizable<T>
+    class Transformable
     {
-        Vec2<T> location;
+        T location;
 
     public:
-        Vec2<T> getLocation() const    { return location; }
-        bool    setLocation(Vec2<T> l) { location = l; return true; }
+        T &getLocation()         { return location; }
+        bool    setLocation(T l) { location = l; return true; }
+    };
+
+    template<typename T>
+    class Transformable2D : public Sizable<T>, public Transformable<Vec2<T>>
+    {
+
+    };
+
+    template<typename T>
+    class Transformable3D : public Sizable<T>, public Transformable<Vec3<T>>
+    {
+
     };
 }

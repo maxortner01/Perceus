@@ -17,12 +17,12 @@ namespace pcs
         #else
         coreLogger->set_level(spdlog::level::trace);
         #endif
+        //coreLogger->set_level(spdlog::level::info);
 
         clientLogger = spdlog::stdout_color_mt("CLIENT").get();
         clientLogger->set_level(spdlog::level::trace);
 
-
-
+        PS_CORE_INFO("Logger initialized");
         return true;
     }
 }

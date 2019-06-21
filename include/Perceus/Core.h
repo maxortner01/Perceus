@@ -16,3 +16,5 @@
 #include "Core/Graphics/ForwardRenderer.h"
 
 #include "Core/Graphics/Model.h"
+
+#include "Core/Graphics/Rendering/Shaders/ShaderProgram.h"

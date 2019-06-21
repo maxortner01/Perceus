@@ -8,14 +8,8 @@ namespace pcs
 {
 namespace rend
 {
-    enum class BufferIndex
+    class BufferArray : public RenderObject, public Data::ObjectID
     {
-        Vertices
-    };
-
-    class BufferArray : public RenderObject
-    {
-        unsigned int id;
         std::vector<Buffer*> buffers;
 
     protected:
@@ -30,7 +24,6 @@ namespace rend
             {
                 buffers.at((int)buffer)->bindData(data, members);
             }
-
         }
 
     public:
@@ -38,7 +31,14 @@ namespace rend
         ~BufferArray();
 
         Buffer &getBuffer(BufferIndex buffer) { return *buffers[(int)buffer]; }
-        unsigned int &getID() { return id; }
+
+        static const char* getBufferName(unsigned int index)
+        {
+            return (const char *[]) {
+                "Vertices",
+                "Indices"
+            }[index];
+        }
     };
 }
 }

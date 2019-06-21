@@ -5,6 +5,8 @@
 namespace pcs
 {
 class Window;
+class Shader;
+class ShaderProgram;
 
 namespace rend
 {
@@ -35,17 +37,38 @@ namespace rend
 
         // RENDERING
         virtual bool clear(Color color) const = 0;
-        virtual bool renderArray(unsigned int vertexCount) const = 0;
+        virtual bool renderInstanced(unsigned int vertexCount, unsigned int count = 1) = 0;
 
         // VERTEX BUFFER OBJECT
         virtual void makeBuffer(Buffer* buffer) const = 0;
         virtual void destroyBuffer(Buffer* buffer) const = 0;
-        virtual void bindBuffer(unsigned int ID, BufferType type = BufferType::Vertex) const = 0;
-        virtual void bindBufferData(unsigned int bytesize, const void* data, unsigned int members, unsigned int index, BufferType type = BufferType::Vertex) const = 0;
+        virtual void unbindBuffer(BufferType type = BufferType::Vertex) const = 0;
+        virtual void bindBuffer(Buffer* buffer, BufferType type = BufferType::Vertex) const = 0;
+        virtual void bindBufferData(unsigned int bytesize, const void* data, unsigned int members, unsigned int index, bool divided = true, BufferType type = BufferType::Vertex) const = 0;
 
         // VERTEX ARRAY OBJECT
         virtual void makeBufferArray(BufferArray* array) const = 0;
         virtual void destroyBufferArray(BufferArray* array) const = 0;
+
+        // SHADER PROGRAM
+        virtual bool makeProgram(ShaderProgram* program) const = 0;
+        virtual bool linkProgram(ShaderProgram* program) const = 0;
+        virtual void useProgram(unsigned int id) const = 0;
+        virtual bool destroyProgram(ShaderProgram* program) const = 0;
+
+        // SHADERS
+        virtual bool makeShader(Shader* shader) const = 0;
+        virtual bool compileShader(Shader* shader, const char* source) const = 0;
+        virtual bool destroyShader(Shader* shader) const = 0;
+
+        unsigned int &getRenderCalls() { return renderCalls; }
+        unsigned int &getVertexCount() { return vertexCount; }
+        unsigned int &getObjectCount() { return objectCount; }
+
+    protected:
+        unsigned int renderCalls = 0;
+        unsigned int vertexCount = 0;
+        unsigned int objectCount = 0;
     };
 }
 }

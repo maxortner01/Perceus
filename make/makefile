@@ -16,7 +16,7 @@ ifeq ($(OS),Windows_NT)     # is Windows_NT on XP, 2000, 7, Vista, 10...
     detected_OS := Windows
 	EXTENSION := dll --out-implib
 else
-	COMP_FLAGS := -fPIC -std=c++17 -D_PCS_DEBUG
+	COMP_FLAGS := -fPIC -std=c++17 -D_PCS_DEBUG -O1
 	EXTENSION := so
     detected_OS := $(shell uname)  # same as "uname -s"
 endif

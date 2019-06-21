@@ -16,6 +16,15 @@ namespace rend
     struct RenderSettings
     {
         RenderAPIType api = OpenGL;
+
+        const char* getAPIName(RenderAPIType type) const
+        {
+            return (const char *[]){
+                "OpenGL",
+                "DirectX11",
+                "Vulkan"
+            }[type];
+        }
     };
 
     class RenderObject

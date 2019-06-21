@@ -3,16 +3,23 @@
 #include <vector>
 #include "RenderObject.h"
 
+#include "Perceus/Data/ObjectID.h"
 #include "Perceus/Util/Log.h"
 
 namespace pcs
 {
 namespace rend
 {
-
-    class Buffer : public RenderObject
+    enum class BufferIndex
     {
-        unsigned int id, _index, _count;
+        Vertices,
+        Translation,
+        Indices
+    };
+
+    class Buffer : public RenderObject, public Data::ObjectID
+    {
+        unsigned int _index, _count;
 
     public:
         Buffer(unsigned int index);
@@ -26,14 +33,14 @@ namespace rend
 
         ~Buffer();
 
-        void bind()   const { rendAPI()->bindBuffer(id); }
-        void unbind() const { rendAPI()->bindBuffer(0);  }
+        void bind();
+        void unbind() const;
 
         template<typename T>
         void bindData(T* data, unsigned int count, unsigned int members)
         {
             bind();
-            rendAPI()->bindBufferData(sizeof(T) * count, data, members, _index);
+            rendAPI()->bindBufferData(sizeof(T) * count, data, members,true, _index);
             unbind();
 
             _count = count;
@@ -42,16 +49,22 @@ namespace rend
         template<typename T>
         void bindData(std::vector<T> data, unsigned int members)
         {
-            PS_CORE_DEBUG("Loading {0} items with {2} members into buffer {1}", data.size(), _index, members);
-
             bind();
-            rendAPI()->bindBufferData(sizeof(T) * data.size(), &data[0], members, _index);
+            BufferType type = BufferType::Vertex;
+            bool divided = true;
+
+            if (_index == (int)BufferIndex::Indices)
+                type = BufferType::Index;
+            
+            if (_index == (int)BufferIndex::Translation)
+                divided = false;
+
+            rendAPI()->bindBufferData(sizeof(T) * data.size(), &data[0], members, _index, divided, type);
             unbind();
 
             _count = data.size();
         }
 
-        unsigned int &getID()    { return id; }
         unsigned int &getIndex() { return _index; }
         unsigned int &getCount() { return _count; }
     };

@@ -1,5 +1,7 @@
 #include "Perceus/Core/Graphics/Rendering/Buffer.h"
 
+#include "Perceus/Core/Graphics/Rendering/BufferArray.h"
+
 namespace pcs
 {
 namespace rend
@@ -8,15 +10,27 @@ namespace rend
         _index(index)
     {
         rendAPI()->makeBuffer(this);
-
-        PS_CORE_DEBUG("Vertex Buffer ({0}) created", getID());
     }
 
     Buffer::~Buffer()
     {
         rendAPI()->destroyBuffer(this);
+    }
 
-        PS_CORE_DEBUG("Vertex Buffer ({0}) destroyed", getID());
+    void Buffer::bind() 
+    { 
+        if (_index != (int)BufferIndex::Indices)
+            rendAPI()->bindBuffer(this);
+        else
+            rendAPI()->bindBuffer(this, BufferType::Index);
+    }
+
+    void Buffer::unbind() const 
+    { 
+        if (_index != (int)BufferIndex::Indices)
+            rendAPI()->unbindBuffer();
+        else
+            rendAPI()->unbindBuffer(BufferType::Index);
     }
 }
 }
