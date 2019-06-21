@@ -13,7 +13,7 @@ namespace rend
     enum class BufferIndex
     {
         Vertices,
-        Translation,
+        ModelMatrix,
         Indices
     };
 
@@ -55,14 +55,16 @@ namespace rend
 
             if (_index == (int)BufferIndex::Indices)
                 type = BufferType::Index;
-            
-            if (_index == (int)BufferIndex::Translation)
-                divided = false;
 
             rendAPI()->bindBufferData(sizeof(T) * data.size(), &data[0], members, _index, divided, type);
             unbind();
 
             _count = data.size();
+        }
+
+        void bindData(std::vector<Mat4f> &matrices)
+        {
+            rendAPI()->bindBufferMatrixData(this, matrices);
         }
 
         unsigned int &getIndex() { return _index; }

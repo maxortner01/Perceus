@@ -12,19 +12,11 @@ namespace pcs
         ERROR
     };
 
-namespace rend
-{
-    struct TInfo
-    {
-        std::vector<Vec3f>* translation;
-    };
-}
-
     class Renderer : public rend::RenderObject
     {
     protected:
 
-        bool processModels(std::vector<Model*> &models, rend::TInfo info) const;
+        bool processModels(std::vector<Model*> &models, std::vector<Mat4f> &matrices) const;
 
     public:
         virtual int render(RawModel* rawModel, unsigned int count = 1) const = 0;

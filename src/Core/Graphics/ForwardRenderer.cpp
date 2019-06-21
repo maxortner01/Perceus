@@ -22,8 +22,8 @@ namespace pcs
 
         double before_time = rendAPI()->getTime();
 
-        std::vector<Vec3f> translations;
-        processModels(models, { &translations });
+        std::vector<Mat4f> translations;
+        processModels(models, translations);
         //translations.resize(models.size());
         //for (int i = 0; i < models.size(); i++)
         //{
@@ -31,7 +31,7 @@ namespace pcs
         //    translations[i] = models[i]->getLocation();
         //}
 
-        rawModel->loadTranslations(translations);
+        rawModel->loadModelMatrices(translations);
 
         double elapsed_time = rendAPI()->getTime() - before_time;
         getProcessTime() = elapsed_time;

@@ -185,6 +185,39 @@ namespace rend
         PS_CORE_DEBUG("Vertex Buffer ({0}) destroyed", buffer->getID());
     }
 
+    void rawDataBind(unsigned int bytesize, const void* data)
+    {
+        glBufferData(GL_ARRAY_BUFFER, bytesize, data, GL_DYNAMIC_DRAW);
+    }
+
+    void OpenAPI::bindBufferMatrixData(Buffer* buffer, std::vector<Mat4f> &matrices) const
+    {
+        // True and index so we can bypass the attrib pointer and divisor
+        buffer->bind();
+        rawDataBind(matrices.size() * 4 * 4 * sizeof(float), &matrices[0]);
+        buffer->unbind();
+
+        unsigned int index = buffer->getIndex();
+        
+        glEnableVertexAttribArray(index + 0);
+        glEnableVertexAttribArray(index + 1);
+        glEnableVertexAttribArray(index + 2);
+        glEnableVertexAttribArray(index + 3);
+
+        buffer->bind();
+        glVertexAttribPointer(index + 0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4 * 4, (void*)(0));
+        glVertexAttribPointer(index + 1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4 * 4, (void*)(sizeof(float) * 4));
+        glVertexAttribPointer(index + 2, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4 * 4, (void*)(sizeof(float) * 8));
+        glVertexAttribPointer(index + 3, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4 * 4, (void*)(sizeof(float) * 12)); 
+
+        glVertexAttribDivisor(index + 0, 1);
+        glVertexAttribDivisor(index + 1, 1);
+        glVertexAttribDivisor(index + 2, 1);
+        glVertexAttribDivisor(index + 3, 1);
+        PS_CORE_DEBUG("Loaded {0} model matrices to vertex attributes {1}-{2}", matrices.size(), index, index + 3);
+        
+    }
+
     void OpenAPI::unbindBuffer(BufferType type) const
     {
         GLenum t = GL_ARRAY_BUFFER;

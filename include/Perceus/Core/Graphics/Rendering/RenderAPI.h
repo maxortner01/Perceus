@@ -1,6 +1,9 @@
 #pragma once
 
+#include "Perceus/Data/Matrix.h"
 #include "Perceus/Data/Color.h"
+
+#include <vector>
 
 namespace pcs
 {
@@ -42,6 +45,7 @@ namespace rend
         // VERTEX BUFFER OBJECT
         virtual void makeBuffer(Buffer* buffer) const = 0;
         virtual void destroyBuffer(Buffer* buffer) const = 0;
+        virtual void bindBufferMatrixData(Buffer* buffer, std::vector<Mat4f> &matrices) const = 0;
         virtual void unbindBuffer(BufferType type = BufferType::Vertex) const = 0;
         virtual void bindBuffer(Buffer* buffer, BufferType type = BufferType::Vertex) const = 0;
         virtual void bindBufferData(unsigned int bytesize, const void* data, unsigned int members, unsigned int index, bool divided = true, BufferType type = BufferType::Vertex) const = 0;

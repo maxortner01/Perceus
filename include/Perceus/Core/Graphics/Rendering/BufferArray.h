@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Perceus/Data/Matrix.h"
 #include "Buffer.h"
 
 #define ARRAY_SIZE 16
@@ -14,7 +15,7 @@ namespace rend
 
     protected:
         template<typename T>
-        void bindBuffer(BufferIndex buffer, unsigned int members, std::vector<T> data)
+        void bindBuffer(BufferIndex buffer, unsigned int members, std::vector<T> &data)
         {
             if (!buffers.at((int)buffer)) 
             {
@@ -23,6 +24,20 @@ namespace rend
             else
             {
                 buffers.at((int)buffer)->bindData(data, members);
+            }
+        }
+        
+        
+        void bindBuffer(std::vector<Mat4f> &data)
+        {
+            unsigned int index = (int)BufferIndex::ModelMatrix;
+            if (!buffers.at((index))) 
+            {
+                buffers.at(index) = new Buffer(index, data);
+            }
+            else
+            {
+                buffers.at(index)->bindData(data);
             }
         }
 
@@ -36,6 +51,7 @@ namespace rend
         {
             return (const char *[]) {
                 "Vertices",
+                "Model Matrix",
                 "Indices"
             }[index];
         }

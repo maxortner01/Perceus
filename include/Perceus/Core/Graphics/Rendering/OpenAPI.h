@@ -32,6 +32,7 @@ namespace rend
         // VERTEX BUFFER OBJECTS
         void makeBuffer(Buffer* buffer) const;
         void destroyBuffer(Buffer* buffer) const;
+        void bindBufferMatrixData(Buffer* buffer, std::vector<Mat4f> &matrices) const;
         void unbindBuffer(BufferType type = BufferType::Vertex) const;
         void bindBuffer(Buffer* buffer, BufferType type = BufferType::Vertex) const;
         void bindBufferData(unsigned int bytesize, const void* data, unsigned int members, unsigned int index, bool divided = true, BufferType type = BufferType::Vertex) const;

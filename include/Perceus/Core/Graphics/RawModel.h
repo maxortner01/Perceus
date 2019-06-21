@@ -9,7 +9,7 @@ namespace pcs
     {
     public:
         bool loadVertices(std::vector<Vec3f> vertices);
-        bool loadTranslations(std::vector<Vec3f> translations);
+        bool loadModelMatrices(std::vector<Mat4f> &matrices);
 
         bool generateIndices(std::vector<Vec3f> vertices);
     };

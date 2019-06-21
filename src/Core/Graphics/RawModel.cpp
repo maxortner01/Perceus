@@ -1,5 +1,7 @@
 #include "Perceus/Core/Graphics/RawModel.h"
 
+#include "Perceus/Data/Matrix.h"
+
 namespace pcs
 {
     bool RawModel::loadVertices(std::vector<Vec3f> vertices)
@@ -8,9 +10,9 @@ namespace pcs
         return true;
     }
 
-    bool RawModel::loadTranslations(std::vector<Vec3f> translations)
+    bool RawModel::loadModelMatrices(std::vector<Mat4f> &matrices)
     {
-        bindBuffer(rend::BufferIndex::Translation, 3, translations);
+        bindBuffer(matrices);
         return true;
     }
 
