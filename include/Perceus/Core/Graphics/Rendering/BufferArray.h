@@ -43,7 +43,7 @@ namespace rend
 
     public:
         BufferArray();
-        ~BufferArray();
+        virtual ~BufferArray();
 
         Buffer &getBuffer(BufferIndex buffer) { return *buffers[(int)buffer]; }
 

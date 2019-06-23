@@ -35,4 +35,9 @@ namespace pcs
 
         return r;
     }
+
+    bool ShaderProgram::setUniform(const char* name, const Mat4f &matrix)
+    {
+        return rendAPI()->setUniform(this, name, matrix);
+    }
 }

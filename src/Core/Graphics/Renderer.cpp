@@ -5,6 +5,7 @@
 
 namespace pcs
 {
+    /*
     void processModel(std::vector<Model*> models, std::vector<Mat4f>* output)
     {
         output->resize(models.size());
@@ -14,7 +15,9 @@ namespace pcs
             output->at(i) = Mat4f::makeTranslation(models[i]->getLocation());
         }
     }
+    */
 
+    /*
     bool Renderer::processModels(std::vector<Model*> &models, std::vector<Mat4f> &matrices) const
     {
         const unsigned int per_thread_count = 81000;
@@ -59,5 +62,34 @@ namespace pcs
         }
 
         return true;
+    } */
+
+    double Renderer::processModels(RawModel* rawModel, std::vector<Model*> &models) const
+    {
+        double before_time = rendAPI()->getTime();
+
+        std::vector<Mat4f> translations;
+        translations.resize(models.size());
+        for (int i = 0; i < models.size(); i++)
+        {
+            models[i]->update();
+            translations[i] = Mat4f::makeTranslation(models[i]->getLocation());
+        }
+
+        rawModel->loadModelMatrices(translations);
+
+        double elapsed_time = rendAPI()->getTime() - before_time;
+        getProcessTime() = elapsed_time;
+
+        return elapsed_time;
+    }
+
+    int Renderer::render(std::vector<Model*> models, ShaderProgram* shader, Camera* camera) const
+    {
+        RawModel* rawModel = models.at(0)->getRawModel();
+
+        processModels(rawModel, models);
+
+        return render(rawModel, shader, camera, models.size());
     }
 }

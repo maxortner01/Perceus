@@ -192,7 +192,6 @@ namespace rend
 
     void OpenAPI::bindBufferMatrixData(Buffer* buffer, std::vector<Mat4f> &matrices) const
     {
-        // True and index so we can bypass the attrib pointer and divisor
         buffer->bind();
         rawDataBind(matrices.size() * 4 * 4 * sizeof(float), &matrices[0]);
         buffer->unbind();
@@ -335,15 +334,28 @@ namespace rend
         glEnable(GL_DEPTH_TEST);
         glDepthFunc(GL_LESS);
 
-        PS_CORE_DEBUG("Using shader program {0}", id);
         glUseProgram(id);
+        PS_CORE_DEBUG("Using shader program {0}", id);
     }
 
     bool OpenAPI::destroyProgram(ShaderProgram* program) const
     {
-        PS_CORE_WARN("Shader program ({0}) destroyed", program->getID());
         glDeleteProgram(program->getID());
+        PS_CORE_WARN("Shader program ({0}) destroyed", program->getID());
         return true;
+    }
+    
+    bool OpenAPI::setUniform(ShaderProgram* program, const char* uniform_name, const Mat4f &matrix) const
+    {
+        unsigned int location = glGetUniformLocation(program->getID(), uniform_name);
+
+        if (location != -1)
+        {
+            glUniformMatrix4fv(location, 1, GL_FALSE, &matrix.m[0][0]);
+            return true;
+        }
+
+        return false;
     }
 
     bool OpenAPI::makeShader(Shader* shader) const

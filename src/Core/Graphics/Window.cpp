@@ -2,6 +2,8 @@
 #include "Perceus/Util/Log.h"
 
 #include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
+#include "Perceus/Core/Graphics/Camera.h"
+#include "Perceus/Core/Engine.h"
 
 namespace pcs
 {
@@ -70,6 +72,13 @@ namespace pcs
     bool Window::resize(unsigned int width, unsigned int height)
     {
         setSize({ (int)width, (int)height });
+        
+        // Need to recompute projection matrices on window resize
+        std::vector<void*> &c = Engine::get().getCameraDirectory();
+        PS_CORE_DEBUG("Recomputing Projections for {0} camera(s) for window size {1}x{2}", c.size(), width, height);
+        for (int i = 0; i < c.size(); i++)
+            static_cast<Camera*>(c.at(i))->makeProjection();
+
         return rendAPI()->resizeWindow(this, width, height);
     }
 }

@@ -17,6 +17,8 @@ namespace pcs
         Shader &getShader(ShaderType type);
         bool link();
 
+        bool setUniform(const char* name, const Mat4f &matrix);
+
         void use()   const { rendAPI()->useProgram(id); }
         void close() const { rendAPI()->useProgram(0); }
     };

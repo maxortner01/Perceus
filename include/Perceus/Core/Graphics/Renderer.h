@@ -1,7 +1,10 @@
 #pragma once
 
+#include "Perceus/Core/Graphics/Rendering/Shaders/ShaderProgram.h"
 #include "Perceus/Data/Singleton.h"
 #include "Rendering/RenderObject.h"
+
+#include "Camera.h"
 #include "Model.h"
 
 namespace pcs
@@ -15,12 +18,11 @@ namespace pcs
     class Renderer : public rend::RenderObject
     {
     protected:
-
-        bool processModels(std::vector<Model*> &models, std::vector<Mat4f> &matrices) const;
+        double processModels(RawModel* rawModel, std::vector<Model*> &models) const;
 
     public:
-        virtual int render(RawModel* rawModel, unsigned int count = 1) const = 0;
-        virtual int render(std::vector<Model*> models) const = 0;
+        virtual int render(RawModel* rawModel, ShaderProgram* shader, Camera* camera, unsigned int count = 1) const = 0;
+        int render(std::vector<Model*> models, ShaderProgram* shader, Camera* camera) const;
 
         static double &getProcessTime()
         {

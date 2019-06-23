@@ -1,5 +1,7 @@
 #include "Perceus/Core/Application.h"
 
+#include "Perceus/Util/Log.h"
+
 namespace pcs
 {
     void Application::pushScene(Scene* s)
@@ -24,6 +26,7 @@ namespace pcs
     {
         if (scenes.size() == 0) return (int)ExitCode::NO_SCENES;
         
+        PS_CORE_DEBUG("Running application");
         engine->getWindow()->resize(1920, 1080);
         while (engine->getWindow()->isOpen())
         {

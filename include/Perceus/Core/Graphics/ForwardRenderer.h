@@ -7,7 +7,7 @@ namespace pcs
     class ForwardRenderer : public Renderer, public Data::Singleton<ForwardRenderer>
     {
     public:
-        int render(RawModel* rawModel, unsigned int count = 1) const;
-        int render(std::vector<Model*> models) const;
+        using Renderer::render;
+        int render(RawModel* rawModel, ShaderProgram* shader, Camera* camera, unsigned int count = 1) const;
     };
 }

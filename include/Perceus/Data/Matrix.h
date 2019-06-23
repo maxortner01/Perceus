@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include "Vector.h"
 
 namespace pcs
@@ -34,6 +35,33 @@ namespace pcs
         Vec4f getRow(int index)
         {
             return Vec4f(m[index][0], m[index][1], m[index][2], m[index][3]);
+        }
+
+        Matrix<T, R, C> operator*(const Matrix<T, R, C> &mat) const
+        {
+            Matrix<T, R, C> res = Matrix<T, R, C>();
+
+            for (int i = 0; i < R; i++)
+                for (int j = 0; j < R; j++)
+                {
+                    res.m[i][j] = 0;
+                    for (int k = 0; k < R; k++)
+                        res.m[i][j] += m[i][k] * mat.m[k][j];
+                }
+
+            return res;
+        }
+
+        void print() const
+        {
+            for (int i = 0; i < R; i++)
+            {
+                for (int j = 0; j < C; j++)
+                {
+                    std::cout << m[i][j] << " ";
+                }
+                std::cout << std::endl;
+            }
         }
     };
 

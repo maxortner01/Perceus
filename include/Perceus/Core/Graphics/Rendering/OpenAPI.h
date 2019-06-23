@@ -46,6 +46,7 @@ namespace rend
         bool linkProgram(ShaderProgram* program) const;
         void useProgram(unsigned int id) const;
         bool destroyProgram(ShaderProgram* program) const;
+        bool setUniform(ShaderProgram* program, const char* uniform_name, const Mat4f &matrix) const;
 
         // SHADERS
         bool makeShader(Shader* shader) const;

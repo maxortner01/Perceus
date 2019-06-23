@@ -4,6 +4,16 @@
 
 namespace pcs
 {
+    RawModel::RawModel(const VertexArray &vertex)
+    {
+        loadVertices(vertex.getVertices());
+    }
+
+    RawModel::~RawModel()
+    {
+        PS_CORE_DEBUG("Destroying RawModel");
+    }
+
     bool RawModel::loadVertices(std::vector<Vec3f> vertices)
     {
         bindBuffer(rend::BufferIndex::Vertices, 3, vertices);

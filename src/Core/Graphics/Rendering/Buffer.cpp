@@ -14,7 +14,9 @@ namespace rend
 
     Buffer::~Buffer()
     {
+        PS_CORE_DEBUG("Destroying Buffer {0}", _index);
         rendAPI()->destroyBuffer(this);
+        PS_CORE_DEBUG("Buffer Destroyed");
     }
 
     void Buffer::bind() 

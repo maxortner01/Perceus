@@ -37,18 +37,37 @@ namespace pcs
 
         }
 
-        void operator+(const Vec3<T> &v)
+        Vec3<T> operator+(const Vec3<T> &v) const
         {
-            x += v.x;
-            y += v.y;
-            z += v.z;
+            Vec3<T> t = Vec3<T>();
+
+            t.x += v.x;
+            t.y += v.y;
+            t.z += v.z;
+
+            return t;
         }
 
-        void operator-(const Vec3<T> &v)
+        Vec3<T> operator-(const Vec3<T> &v) const
         {
-            x -= v.x;
-            y -= v.y;
-            z -= v.z;
+            Vec3<T> t = Vec3<T>();
+
+            t.x -= v.x;
+            t.y -= v.y;
+            t.z -= v.z;
+
+            return t;
+        }
+
+        Vec3<T> operator *(const float &k) const
+        {
+            Vec3<T> t = Vec3<T>();
+
+            t.x = x * k;
+            t.y = y * k;
+            t.z = z * k;
+
+            return t;
         }
     };
 
