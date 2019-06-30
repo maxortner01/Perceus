@@ -1,0 +1,35 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "compile",
+            "type": "shell",
+            //"command": "clear && echo Perceus && make -C Perceus/make/ --no-print-directory && echo Client && make -C Client/make/ --no-print-directory",
+            "command": "python3 ./Perceus/make/make.py make",
+            "problemMatcher": []
+        },
+        {
+            "label": "run",
+            "type": "shell",
+            "command": "bash ./Client/make/run.sh",
+            //"command": "python3 ./Perceus/make/make.py",
+            "problemMatcher": []
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            //"command": "make -C Perceus/make/ clean --no-print-directory && make -C Client/make/ clean --no-print-directory",
+            "command": "python3 ./Perceus/make/make.py clean",
+            "problemMatcher": []
+        },
+        {
+            "label": "recompile",
+            "type": "shell",
+            //"command": "make -C Perceus/make/ clean --no-print-directory && make -C Client/make/ clean --no-print-directory && clear && echo Perceus && make -C Perceus/make/ --no-print-directory && echo Client && make -C Client/make/ --no-print-directory",
+            "command": "python3 ./Perceus/make/make.py recompile",
+            "problemMatcher": []
+        }
+    ]
+}
