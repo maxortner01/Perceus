@@ -12,6 +12,8 @@ namespace pcs
         loadNormals(vertex.getNormals());
         loadTexCoords(vertex.getTexCoords());
         loadColors(vertex.getColors());
+        loadTangents(vertex.getTangents());
+        loadBitangents(vertex.getBitangents());
     }
 
     RawModel::~RawModel()
@@ -53,6 +55,18 @@ namespace pcs
     bool RawModel::loadModelMatrices(std::vector<Mat4f> &matrices)
     {
         bindBuffer(matrices);
+        return true;
+    }
+
+    bool RawModel::loadBitangents(std::vector<Vec3f> bitangents)
+    {
+        bindBuffer(rend::BufferIndex::Bitangents, 3, bitangents);
+        return true;
+    }
+
+    bool RawModel::loadTangents(std::vector<Vec3f> tangents)
+    {
+        bindBuffer(rend::BufferIndex::Tangents, 3, tangents);
         return true;
     }
 

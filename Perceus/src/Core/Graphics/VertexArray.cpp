@@ -29,4 +29,14 @@ namespace pcs
     {
         getType(Vec2f, tex);
     }
+
+    std::vector<Vec3f> VertexArray::getBitangents() const
+    {
+        getType(Vec3f, bitangent);
+    }
+
+    std::vector<Vec3f> VertexArray::getTangents() const
+    {
+        getType(Vec3f, tangent);
+    }
 }

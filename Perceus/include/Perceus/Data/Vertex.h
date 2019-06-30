@@ -7,8 +7,13 @@ namespace pcs
 {
     struct Vertex
     {
-        Vec3f vertex, normal;
+        friend class ParserOBJ;
+
+        Vec3f vertex, normal, tangent, bitangent;
         Vec2f tex;
         Color color = Color(1.f, 1.f, 1.f);
+
+    private:
+        unsigned int _tan_count, _bitan_count;
     };
 }

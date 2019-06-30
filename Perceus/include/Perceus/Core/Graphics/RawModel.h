@@ -26,6 +26,8 @@ namespace pcs
         bool loadVertices(std::vector<Vec3f> vertices);
         bool loadTexCoords(std::vector<Vec2f> texCoords);
         bool loadModelMatrices(std::vector<Mat4f> &matrices);
+        bool loadBitangents(std::vector<Vec3f> bitangents);
+        bool loadTangents(std::vector<Vec3f> tangents);
 
         bool generateIndices(std::vector<Vec3f> vertices);
     };

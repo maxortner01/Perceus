@@ -139,6 +139,43 @@ namespace pcs
             }
         }
 
+        for (int i = 0; i < vertex->getVertexArray().size(); i += 3)
+        {
+            Vertex &v0 = vertex->getVertexArray()[i + 0];
+            Vertex &v1 = vertex->getVertexArray()[i + 1];
+            Vertex &v2 = vertex->getVertexArray()[i + 2];
+
+            Vec3f deltaPos1 = v1.vertex - v0.vertex;
+            Vec3f deltaPos2 = v2.vertex - v0.vertex;
+
+            Vec2f deltaUV1 = v1.tex - v0.tex;
+            Vec2f deltaUV2 = v2.tex - v0.tex;
+        
+            float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+            Vec3f tangent   = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y)*r;
+            Vec3f bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x)*r;
+
+            v0.tangent += tangent;
+            v0._tan_count++;
+            v1.tangent += tangent;
+            v1._tan_count++;
+            v2.tangent += tangent;
+            v2._tan_count++;
+
+            v0.bitangent += bitangent;
+            v0._bitan_count++;
+            v1.bitangent += bitangent;
+            v1._bitan_count++;
+            v2.bitangent += bitangent;
+            v2._bitan_count++;
+        }
+
+        for (int i = 0; i < vertex->getVertexArray().size(); i++)
+        {
+            vertex->getVertexArray()[i].tangent /= (float)vertex->getVertexArray()[i]._tan_count;
+            vertex->getVertexArray()[i].bitangent /= (float)vertex->getVertexArray()[i]._bitan_count;
+        }
+
         return vertex;
     }
 }
