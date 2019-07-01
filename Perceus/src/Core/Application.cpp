@@ -27,7 +27,7 @@ namespace pcs
         if (scenes.size() == 0) return (int)ExitCode::NO_SCENES;
         
         PS_CORE_DEBUG("Running application");
-        engine->getWindow()->resize(1280, 720);
+        engine->getWindow()->resize(1920, 1080);
         while (engine->getWindow()->isOpen())
         {
             if (scenes[0]->getState() == pcs::SceneState::FINISHED)

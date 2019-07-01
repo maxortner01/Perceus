@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vector>
 #include "Perceus/Data/ObjectID.h"
 #include "Perceus/Core/Graphics/Rendering/RenderObject.h"
 
@@ -29,12 +30,9 @@ namespace pcs
 
     union TextureArray
     {
-        struct
-        {
-            Texture* textures[(unsigned long)TextureTypes::Count];
-        };
+        Texture* textures[(int)TextureTypes::Count];
 
-        struct
+        struct 
         {
             Texture* albedo = nullptr;
             Texture* normal = nullptr;

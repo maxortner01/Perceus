@@ -1,5 +1,6 @@
 #include "Perceus/Core/Graphics/ForwardRenderer.h"
 
+#include <string>
 #include <iostream>
 
 namespace pcs
@@ -19,21 +20,29 @@ namespace pcs
         //PS_CORE_DEBUG(" -- {0} --", rawModel->getBuffer(rend::BufferIndex::Vertices).getCount());
 
         const char* textures[] = {
-            "albedo", "normal", "roughness"
+            "albedo", "normalTex"
         };
+
+        shader->use();
         
         for (int i = 0; i < (int)TextureTypes::Count; i++)
         {
             Texture* tex = rawModel->getTextures().textures[i];
 
+            const char* name   = (std::string(textures[i]) + ".texture").c_str();
+            const char* exists = (std::string(textures[i]) + ".exists" ).c_str();
+
             if (tex)
             {
                 tex->bind(i);
-                shader->setUniform(textures[i], i);
+                shader->setUniform(name, i);
+                shader->setUniform(exists, 1);
+            }
+            else
+            {
+                shader->setUniform(exists, 0);
             }
         }
-
-        shader->use();
 
         shader->setUniform("camera_position", camera->getLocation());
         shader->setUniform("projection", camera->getProjection());

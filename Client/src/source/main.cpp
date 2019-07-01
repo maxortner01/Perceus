@@ -24,6 +24,8 @@ class MainScreen : public pcs::Scene
     pcs::RawModel* rawModel;
     pcs::ShaderProgram program;
     pcs::Camera camera;
+
+    pcs::Texture normalTex;
     pcs::Texture texture;
 
 protected:
@@ -64,9 +66,12 @@ public:
 
 
         rawModel = new pcs::RawModel(*vertex);
+        normalTex.loadFromFile("Client/res/Sword1/normal.png");
         texture.loadFromFile("Client/res/Sword1/color.png");
 
         rawModel->getTextures().albedo = &texture;
+        //rawModel->getTextures().normal = &normalTex;
+
         rawModel->generateIndices(vertex->getVertices());
         delete vertex;
         
@@ -91,14 +96,15 @@ public:
             "layout (location = 1) in vec3 l_normal;\n"
             "layout (location = 2) in vec2 texC;\n"
             "layout (location = 3) in vec4 color;\n"
-            "layout (location = 4) in vec4 tangent;\n"
-            "layout (location = 5) in vec4 bitangent;\n"
+            "layout (location = 4) in vec3 tangent;\n"
+            "layout (location = 5) in vec3 bitangent;\n"
             "layout (location = 6) in mat4 model;\n"
             "\n"
             "out vec3 norm;\n"
             "out vec3 pos;\n"
             "out vec4 col;\n"
             "out vec2 tex;"
+            "out mat3 tbn;"
             "\n"
             "uniform mat4 projection;\n"
             "uniform mat4 view;\n"
@@ -111,6 +117,15 @@ public:
             "  pos = modelPosition.xyz;\n"
             "  col = color;"
             "  tex = texC;"
+            ""
+            "  vec3 tang   = normalize((vec4(tangent, 0.0) * model * view).xyz);"
+            "  vec3 bitang = normalize(cross(norm, tang));"
+            ""
+            "  tbn = mat3("
+            "    tang,"
+            "    bitang,"
+            "    norm"
+            "  );"
             "}\n"
         );
 
@@ -118,31 +133,50 @@ public:
             "#version 330 core\n"
             "out vec3 color;\n"
             "\n"
-            "uniform sampler2D albedo;"
+            ""
+            "struct Texture {"
+            "  sampler2D texture;"
+            "  int exists;"
+            "};"
+            ""
+            "uniform Texture albedo;"
+            "uniform Texture normalTex;"
             "uniform vec3 camera_position;"
             ""
             "in vec3 norm;\n"
             "in vec3 pos;\n"
             "in vec4 col;\n"
             "in vec2 tex;"
+            "in mat3 tbn;"
+            ""
+            "vec3 getAlbedoColor() {"
+            "  if (albedo.exists == 1) { return texture(albedo.texture, tex).rgb; }"
+            "  return col.rgb;"
+            "}"
+            ""
+            "vec3 getNormal() {"
+            "  if (normalTex.exists == 1) {  /* return normal from texture */  }"
+            "  return norm;"
+            "}"
+            ""
             "\n"
             "void main() {\n"
             "  vec3 lightDir = normalize(vec3(1, 0, -1));" // * light_color
             "  vec3 light_color = vec3(1, 1, 1);"
+            "  vec3 viewDir = normalize(camera_position - pos);"
             ""
             ""
             "  float specular_strength = 0.5;"
-            "  vec3 viewDir = normalize(camera_position - pos);"
-            "  vec3 reflectDir = reflect(-lightDir, norm);"
+            "  vec3 reflectDir = reflect(-lightDir, getNormal());"
             "  float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);"
             "  vec3 specular = specular_strength * spec * light_color;"
             ""
-            "  "
+            ""
             //"  vec3 norm = normalize(normal);\n"
-            "  float diff = max(dot(norm, lightDir), 0.0);"
+            "  float diff = max(dot(getNormal(), lightDir), 0.0);"
             //"  color = col.xyz * diff;"
             "  vec3 diffuse = light_color * diff;\n"
-            "  color = (diffuse + specular) * texture(albedo, tex).xyz;"
+            "  color = (diffuse + specular) * getAlbedoColor();"
             "}\n"
         );
 
