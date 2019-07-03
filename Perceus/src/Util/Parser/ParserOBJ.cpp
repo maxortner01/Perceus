@@ -107,7 +107,10 @@ namespace pcs
             PS_CORE_ERROR("OBJ File Error: {0}", err);
 
         if (!ret)
+        {
+            PS_CORE_ERROR("OBJ File [ {0} ] does not exist!", fileLocation);
             return vertex;
+        }
 
         for (int s = 0; s < shapes.size(); s++)
         {
@@ -153,7 +156,6 @@ namespace pcs
         
             float r = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
             Vec3f tangent   = (deltaPos1 * deltaUV2.y   - deltaPos2 * deltaUV1.y)*r;
-            Vec3f bitangent = (deltaPos2 * deltaUV1.x   - deltaPos1 * deltaUV2.x)*r;
 
             v0.tangent += tangent;
             v0._tan_count++;
@@ -161,19 +163,11 @@ namespace pcs
             v1._tan_count++;
             v2.tangent += tangent;
             v2._tan_count++;
-
-            v0.bitangent += bitangent;
-            v0._bitan_count++;
-            v1.bitangent += bitangent;
-            v1._bitan_count++;
-            v2.bitangent += bitangent;
-            v2._bitan_count++;
         }
 
         for (int i = 0; i < vertex->getVertexArray().size(); i++)
         {
             vertex->getVertexArray()[i].tangent /= (float)vertex->getVertexArray()[i]._tan_count;
-            vertex->getVertexArray()[i].bitangent /= (float)vertex->getVertexArray()[i]._bitan_count;
         }
 
         return vertex;

@@ -32,7 +32,7 @@ namespace pcs
 
     std::vector<Vec3f> VertexArray::getBitangents() const
     {
-        getType(Vec3f, bitangent);
+        //getType(Vec3f, bitangent);
     }
 
     std::vector<Vec3f> VertexArray::getTangents() const

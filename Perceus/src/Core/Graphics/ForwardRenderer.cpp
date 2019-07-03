@@ -29,10 +29,15 @@ namespace pcs
         {
             Texture* tex = rawModel->getTextures().textures[i];
 
-            const char* name   = (std::string(textures[i]) + ".texture").c_str();
-            const char* exists = (std::string(textures[i]) + ".exists" ).c_str();
+            std::string s_name(textures[i]);
+            std::string s_exists(textures[i]);
+            s_name += ".texture";
+            s_exists += ".exists";
 
-            if (tex)
+            const char* name = s_name.c_str();
+            const char* exists = s_exists.c_str();
+
+            if (tex != nullptr)
             {
                 tex->bind(i);
                 shader->setUniform(name, i);

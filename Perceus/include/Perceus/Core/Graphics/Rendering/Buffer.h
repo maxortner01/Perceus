@@ -17,7 +17,6 @@ namespace rend
         TexCoords,
         Color,
         Tangents,
-        Bitangents,
         ModelMatrix,
         Indices
     };

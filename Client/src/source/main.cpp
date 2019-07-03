@@ -11,7 +11,9 @@ public:
         static int frame;
         
         //getLocation().y += cosf((float)frame / 5000000.f + (getLocation().z * 15.f)) / 100.f;
-        getRotation().y += 1.f * deltaTime;
+        //getRotation().y += 1.f * deltaTime;
+
+        getLocation().z -= 5.f * deltaTime;
 
         frame++;
     }
@@ -64,10 +66,9 @@ public:
         //for (int i = 0; i < vertex->getVertexArray().size(); i++)
         //    vertex->getVertexArray()[i].color = pcs::Color(165, 42, 42);
 
-
         rawModel = new pcs::RawModel(*vertex);
-        normalTex.loadFromFile("Client/res/Sword1/normal.png");
         texture.loadFromFile("Client/res/Sword1/color.png");
+        normalTex.loadFromFile("Client/res/Sword1/normal.png");
 
         rawModel->getTextures().albedo = &texture;
         //rawModel->getTextures().normal = &normalTex;
@@ -78,7 +79,8 @@ public:
         pcs::Model* model = new CoolTriangle(rawModel);
         model->setScale({ .75f, .75f, .75f });
         //model->setScale({ .1f, .1f, .1f });
-        model->setRotation({ 0, 0, .25f });
+        model->setLocation({ 0.f, -5.f, 0.f });
+        model->setRotation({ 90.f * 3.14159f / 180.f, 0, 0 });
         models.push_back(model);
 
         //models.resize(5000);
@@ -97,14 +99,14 @@ public:
             "layout (location = 2) in vec2 texC;\n"
             "layout (location = 3) in vec4 color;\n"
             "layout (location = 4) in vec3 tangent;\n"
-            "layout (location = 5) in vec3 bitangent;\n"
-            "layout (location = 6) in mat4 model;\n"
+            "layout (location = 5) in mat4 model;\n"
             "\n"
             "out vec3 norm;\n"
             "out vec3 pos;\n"
             "out vec4 col;\n"
             "out vec2 tex;"
             "out mat3 tbn;"
+            "out mat4 mod;"
             "\n"
             "uniform mat4 projection;\n"
             "uniform mat4 view;\n"
@@ -113,13 +115,14 @@ public:
             "  vec4 modelPosition = vec4(vertices, 1) * model;\n"
             "  gl_Position = modelPosition * view * projection;\n"
             "\n"
-            "  norm = normalize((vec4(l_normal, 1.0) * model).xyz);\n"
+            "  norm = normalize((vec4(l_normal, 1.0)).xyz);\n"
             "  pos = modelPosition.xyz;\n"
             "  col = color;"
             "  tex = texC;"
+            "  mod = model;"
             ""
-            "  vec3 tang   = normalize((vec4(tangent, 0.0) * model * view).xyz);"
-            "  vec3 bitang = normalize(cross(norm, tang));"
+            "  vec3 tang   = normalize((model * vec4(tangent, 1.0)).xyz);"
+            "  vec3 bitang = normalize(cross(tang, norm));"
             ""
             "  tbn = mat3("
             "    tang,"
@@ -143,11 +146,12 @@ public:
             "uniform Texture normalTex;"
             "uniform vec3 camera_position;"
             ""
-            "in vec3 norm;\n"
-            "in vec3 pos;\n"
-            "in vec4 col;\n"
+            "in vec3 norm;"
+            "in vec3 pos;"
+            "in vec4 col;"
             "in vec2 tex;"
             "in mat3 tbn;"
+            "in mat4 mod;"
             ""
             "vec3 getAlbedoColor() {"
             "  if (albedo.exists == 1) { return texture(albedo.texture, tex).rgb; }"
@@ -155,16 +159,18 @@ public:
             "}"
             ""
             "vec3 getNormal() {"
-            "  if (normalTex.exists == 1) {  /* return normal from texture */  }"
+            "  if (normalTex.exists == 1) { "
+            "    vec3 normTex = texture(normalTex.texture, tex).rgb * 2.0 - 1.0;"
+            "    return normalize(normTex + norm);"
+            "  }"
             "  return norm;"
             "}"
             ""
             "\n"
             "void main() {\n"
-            "  vec3 lightDir = normalize(vec3(1, 0, -1));" // * light_color
+            "  vec3 lightDir = normalize(vec4(1, 0, 0, 1) * mod).xyz;" 
             "  vec3 light_color = vec3(1, 1, 1);"
             "  vec3 viewDir = normalize(camera_position - pos);"
-            ""
             ""
             "  float specular_strength = 0.5;"
             "  vec3 reflectDir = reflect(-lightDir, getNormal());"

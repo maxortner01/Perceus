@@ -60,7 +60,7 @@ namespace pcs
 
     bool RawModel::loadBitangents(std::vector<Vec3f> bitangents)
     {
-        bindBuffer(rend::BufferIndex::Bitangents, 3, bitangents);
+        //bindBuffer(rend::BufferIndex::Bitangents, 3, bitangents);
         return true;
     }
 
