@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding=''?>
+<Project>
+    <Directories>
+        <src_dir>./src/</src_dir>
+        <bin_dir>./bin</bin_dir>
+        <obj_dir>./obj/</obj_dir>
+    </Directories>
+    <Settings>
+        <OutputFile>client</OutputFile>
+        <FileType>0</FileType>
+    </Settings>
+    <Includes>
+        <dir>../Perceus/include</dir>
+    </Includes>
+    <Dependancies>
+	<proj flags="">../Perceus/perceus.proj</proj>
+    </Dependancies>
+</Project>
