@@ -40,7 +40,7 @@ namespace rend
             EventHandler::get().pushEvent<KeyDownEvent>(key);
     }
 
-    bool OpenAPI::initialize()
+    bool OpenAPI::initialize() const
     {
         if (!glfwInit())
             return false;
@@ -48,14 +48,14 @@ namespace rend
         return true;
     }
 
-    bool OpenAPI::terminate()
+    bool OpenAPI::terminate() const
     {
         glfwTerminate();
 
         return true;
     }
 
-    int OpenAPI::makeWindow(Window* window)
+    int OpenAPI::makeWindow(Window* window) const
     {
         *window->getAPILoc() = (void*)glfwCreateWindow(window->getSize().x, window->getSize().y, "Test", NULL, NULL);
 
@@ -81,7 +81,7 @@ namespace rend
         return (int)WindowStatus::OK;
     }
 
-    int OpenAPI::destroyWindow(Window* window)
+    int OpenAPI::destroyWindow(Window* window) const
     {
         glfwDestroyWindow((GLFWwindow*)*window->getAPILoc());
 
@@ -159,6 +159,7 @@ namespace rend
     } 
 
     bool OpenAPI::renderInstanced(unsigned int vertexCount, unsigned int count)
+
     {
         renderCalls++;
 

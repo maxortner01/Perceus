@@ -54,7 +54,11 @@ namespace rend
         {
             return (const char *[]) {
                 "Vertices",
-                "Model Matrix",
+                "Normal",
+                "TexCoords",
+                "Color",
+                "Tangents",
+                "ModelMatrix",
                 "Indices"
             }[index];
         }

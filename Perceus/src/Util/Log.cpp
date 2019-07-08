@@ -15,9 +15,9 @@ namespace pcs
         #ifdef _PCS_DEBUG
         coreLogger->set_level(spdlog::level::debug);
         #else
-        coreLogger->set_level(spdlog::level::trace);
-        #endif
         coreLogger->set_level(spdlog::level::info);
+        #endif
+        //coreLogger->set_level(spdlog::level::info);
 
         clientLogger = spdlog::stdout_color_mt("CLIENT").get();
         clientLogger->set_level(spdlog::level::trace);
