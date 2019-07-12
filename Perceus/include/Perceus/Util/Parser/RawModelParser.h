@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../File.h"
-#include "Perceus/Core/Graphics/VertexArray.h"
+#include "Perceus/Core/Graphics/Entities/VertexArray.h"
 
 namespace pcs
 {

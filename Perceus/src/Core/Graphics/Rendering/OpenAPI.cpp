@@ -1,22 +1,6 @@
 #include "Perceus/Core/Graphics/Rendering/Events/EventHandler.h"
-#include "Perceus/Core/Graphics/Rendering/Events.h"
-
-#include "Perceus/Core/Graphics/Rendering/Shaders/Shader.h"
-#include "Perceus/Core/Graphics/Rendering/Shaders/ShaderProgram.h"
-
 #include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
-#include "Perceus/Core/Graphics/Rendering/Buffer.h"
-
-#include "Perceus/Core/Graphics/Texture.h"
-#include "Perceus/Core/Graphics/RawModel.h"
-#include "Perceus/Core/Graphics/ForwardRenderer.h"
-#include "Perceus/Core/Graphics/Window.h"
-#include "Perceus/Util/Log.h"
-
-#include "Perceus/Data/Vector.h"
-
-#include <math.h>
-#include <iostream>
+#include "Perceus/Core.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -55,21 +39,42 @@ namespace rend
         return true;
     }
 
-    int OpenAPI::makeWindow(Window* window) const
+    double OpenAPI::getTime() const
+    {
+        return glfwGetTime();
+    }
+
+    bool OpenAPI::renderInstanced(unsigned int vertexCount, unsigned int count)
+    {
+        renderCalls++;
+
+        glDrawElementsInstanced(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, nullptr, count);
+
+        PS_CORE_DEBUG("Rendering {0} objects ({1} vertices)", count, vertexCount * count);
+
+        getObjectCount()  += count;
+        getVertexCount()  += vertexCount * count;
+        getPolygonCount() += (int)((float)vertexCount * (float)count / 3.f);
+
+        return true;
+    }
+
+    int OpenAPI::makeWindow(Window* window)
     {
         *window->getAPILoc() = (void*)glfwCreateWindow(window->getSize().x, window->getSize().y, "Test", NULL, NULL);
 
         if (!window)
         {
-            return (int)WindowStatus::WINDOW_CREATION_FAILED;
+            return (int)WindowStatus::CreationFailure;
         }
 
         glfwMakeContextCurrent((GLFWwindow*)*window->getAPILoc());
+        current_contex = window->getID();
 
         if (glewInit() != GLEW_OK)
         {
             PS_CORE_ERROR("Failure to initialize OpenGL");
-            return (int)WindowStatus::API_INIT_FAILED;
+            return (int)WindowStatus::APIInitFailure;
         }
 
         PS_CORE_INFO("OpenGL Initialized Successfully");
@@ -77,8 +82,11 @@ namespace rend
         
         glfwSetWindowCloseCallback((GLFWwindow*)*window->getAPILoc(), window_close_callback);
         glfwSetKeyCallback((GLFWwindow*)*window->getAPILoc(), key_callback);
+        //std::cout << "windowptr: "<< *&window->getID() << std::endl;
+        glfwSetWindowUserPointer((GLFWwindow*)window->getAPILoc(), &window->getID());
 
-        return (int)WindowStatus::OK;
+
+        return (int)WindowStatus::Ok;
     }
 
     int OpenAPI::destroyWindow(Window* window) const
@@ -116,63 +124,24 @@ namespace rend
         return true;
     }
 
-    double OpenAPI::getTime() const
-    {
-        return glfwGetTime();
-    }
-
-    void OpenAPI::test() const
-    {
-        static int frame;
-
-        //BufferArray bufferArray = BufferArray();
-        //bufferArray.bindBuffer(BufferIndex::Vertices, 2, vertices);
-
-        //bufferArray.getBuffer(BufferIndex::Vertices).bind();
-
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        //bufferArray.getBuffer(BufferIndex::Vertices).unbind();
-
-        //glBegin(GL_TRIANGLES);
-//
-        //glColor3f(1, 0, 0);
-        //glVertex2f(-.5f, -.5f);
-//
-        //glColor3f(1, 1, 0);
-        //glVertex2f(.5f, -.5f );
-//
-        //glColor3f(1, 0, 1);
-        //glVertex2f(0, .5f);
-//
-        //glEnd();
-
-        frame++;
-    }
-
     bool OpenAPI::clear(Color color) const
     {
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         return true;
+    }
+
+    void OpenAPI::makeContextCurrent(Window* window)
+    {
+        GLFWwindow* w = (GLFWwindow*)window->getAPILoc();
+        glfwMakeContextCurrent(w);
+        current_contex = window->getID();
     } 
 
-    bool OpenAPI::renderInstanced(unsigned int vertexCount, unsigned int count)
-
+    u_int64_t OpenAPI::getCurrentContext() const 
     {
-        renderCalls++;
-
-        glDrawElementsInstanced(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, nullptr, count);
-
-        PS_CORE_DEBUG("Rendering {0} objects ({1} vertices)", count, vertexCount * count);
-
-        getObjectCount() += count;
-        getVertexCount() += vertexCount * count;
-        getPolygonCount() += (int)((float)vertexCount * (float)count / 3.f);
-
-        //glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-        return true;
+        return current_contex;
     }
 
     void OpenAPI::makeBuffer(Buffer* buffer) const
@@ -410,7 +379,7 @@ namespace rend
 
         shader->getID() = glCreateShader(type);
 
-        PS_CORE_INFO("{0} Shader ({1}) Created Successfully", shader->getStatusValue((int)shader->getType()), shader->getID());
+        PS_CORE_INFO("{0} Shader ({1}) Created Successfully", shader->getStatusFromEnum((int)shader->getType()), shader->getID());
 
         return true;
     }
@@ -430,20 +399,20 @@ namespace rend
             std::vector<char> errorMessage(infoLogLength + 1);
             glGetShaderInfoLog(shader->getID(), infoLogLength, nullptr, &errorMessage[0]);
             PS_CORE_ERROR("Error compiling {0} shader ({1}): {2}", 
-                shader->getStatusValue((int)shader->getType()), shader->getID(), std::string(&errorMessage[0]));
+                shader->getStatusFromEnum((int)shader->getType()), shader->getID(), std::string(&errorMessage[0]));
 
             return false;
         }
 
         PS_CORE_INFO("Successfully compiled {0} shader ({1})",
-            shader->getStatusValue((int)shader->getType()), shader->getID());
+            shader->getStatusFromEnum((int)shader->getType()), shader->getID());
 
         return true;
     }
 
     bool OpenAPI::destroyShader(Shader* shader) const
     {
-        PS_CORE_DEBUG("{0} shader ({1}) destroyed", shader->getStatusValue((int)shader->getType()), shader->getID());
+        PS_CORE_DEBUG("{0} shader ({1}) destroyed", shader->getStatusFromEnum((int)shader->getType()), shader->getID());
         glDeleteShader(shader->getID());
         return true;
     }

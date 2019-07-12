@@ -20,7 +20,8 @@ namespace pcs
         COUNT
     };
 
-    class Shader : public rend::RenderObject, public Data::ObjectID, public Data::Status<ShaderStatus>
+    class Shader : 
+        public rend::RenderObject, public Data::ObjectID<Shader>, public Data::Status<ShaderStatus>
     {
         ShaderType type;
 

@@ -3,7 +3,8 @@
 #include "Perceus/Util/Log.h"
 #include "Perceus/Data/Singleton.h"
 #include "Event.h"
-#include <vector>
+#include <stack>
+#include <iostream>
 
 namespace pcs
 {
@@ -11,8 +12,7 @@ namespace pcs
     {
         friend class Engine;
 
-        unsigned int inc = 0;
-        std::vector<Event*> events;
+        std::stack<Event*> events;
 
         void clearEvents();
 
@@ -27,7 +27,7 @@ namespace pcs
             Event* t = new T(args...);
 
             PS_CORE_DEBUG("{0} event caught: {1}", t->getCategory(), t->getName());
-            events.push_back(t);
+            events.push(t);
         }
     };
 }

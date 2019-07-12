@@ -6,13 +6,19 @@ namespace pcs
 {
 namespace rend
 {
-    enum 
+    /**
+     * @brief Enum that holds the types of APIs
+     */
+    enum RenderAPIType
     {
         OpenGL,
         DirectX11,
         Vulkan
-    } typedef RenderAPIType;
+    };
 
+    /**
+     * @brief Container for choosing various API types.
+     */
     struct RenderSettings
     {
         RenderAPIType api = OpenGL;
@@ -27,11 +33,20 @@ namespace rend
         }
     };
 
+    /**
+     * @brief Class for retreiving the currently selected render API.
+     */
     class RenderObject
     {
     protected:
+        /// Used for keeping track of the currently selected render API.
         static RenderSettings settings;
 
+        /**
+         * @brief Holds and retreives the currently selected render API interface.
+         * 
+         * @return RenderAPI* Currently selected render API interface.
+         */
         static RenderAPI* rendAPI();
     };
 }

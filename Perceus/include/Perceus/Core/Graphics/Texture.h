@@ -1,12 +1,13 @@
 #pragma once
 
-#include <vector>
+#include "Perceus/Data/Inc.h"
 #include "Perceus/Data/ObjectID.h"
 #include "Perceus/Core/Graphics/Rendering/RenderObject.h"
 
 namespace pcs
 {
-    class Texture : public Data::ObjectID, public rend::RenderObject
+    class Texture : 
+        public Data::ObjectID<Texture>, public rend::RenderObject
     {
     public:
         Texture();

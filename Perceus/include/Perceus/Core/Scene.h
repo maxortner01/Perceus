@@ -1,40 +1,39 @@
 #pragma once
 
-#include "Graphics/Rendering/Events.h"
+#include "Graphics/Entities/Camera.h"
+#include "Perceus/Data/Status.h"
+#include "Graphics/Rendering/RenderObject.h"
 
 namespace pcs
 {
     // State flags for scenes
-    enum {
-        RUNNING,
-        ERROR,
-        FINISHED,
-        NONE
-    } typedef SceneState;
+    enum class SceneState {
+        Running,
+        Error,
+        Finished,
+        None
+    };
 
     // Category for each context of rendering
-    class Scene
+    class Scene : 
+        public Data::Status<SceneState>,
+        public rend::RenderObject
     {   
         friend class Engine;
-        // Current state of the scene
-        SceneState state;
+        Camera camera;
 
         // Render and handle states
         void _render();
 
     protected:
-        // Change the state of the scene
-        bool setState(SceneState s);
-
         bool pollEvent(Event** event);
 
         virtual void render() = 0;
 
     public:
-        Scene();
+        Scene(float FOV = 90.f);
         virtual ~Scene();
 
-        // Get the current state of the scene
-        SceneState getState() const;
+        Camera& getCamera() { return camera; }
     };
 }

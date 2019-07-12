@@ -98,6 +98,16 @@ namespace pcs
             y /= v;
             z /= v;
         }
+
+        template<typename R>
+        operator Vec3<R>() const
+        {
+            return Vec3<R>(
+                (R)x,
+                (R)y,
+                (R)z
+            );
+        }
     };
 
     template<typename T>
@@ -128,15 +138,18 @@ namespace pcs
         }
     };
 
-    typedef Vec2<double> Vec2d;
-    typedef Vec2<float>  Vec2f;
-    typedef Vec2<int>    Vec2i;
+    typedef Vec2<double>       Vec2d;
+    typedef Vec2<float>        Vec2f;
+    typedef Vec2<int>          Vec2i;
+    typedef Vec2<unsigned int> Vec2u;
 
-    typedef Vec3<double> Vec3d;
-    typedef Vec3<float>  Vec3f;
-    typedef Vec3<int>    Vec3i;
+    typedef Vec3<double>       Vec3d;
+    typedef Vec3<float>        Vec3f;
+    typedef Vec3<int>          Vec3i;
+    typedef Vec3<unsigned int> Vec3u;
 
-    typedef Vec4<double> Vec4d;
-    typedef Vec4<float>  Vec4f;
-    typedef Vec4<int>    Vec4i;
+    typedef Vec4<double>       Vec4d;
+    typedef Vec4<float>        Vec4f;
+    typedef Vec4<int>          Vec4i;
+    typedef Vec4<unsigned int> Vec4u;
 }

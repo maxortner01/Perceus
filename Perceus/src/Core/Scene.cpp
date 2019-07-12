@@ -4,18 +4,16 @@
 
 #include <iostream>
 
+#include "Perceus/Util/Memory/RegTable.h"
+
 namespace pcs
 {
+    using namespace Util::Mem;
+
     void Scene::_render()
     {
-        state = RUNNING;
+        setStatus(SceneState::Running);
         render();
-    }
-
-    bool Scene::setState(SceneState s)
-    {
-        state = s;
-        return true;
     }
 
     bool Scene::pollEvent(Event** event)
@@ -24,23 +22,26 @@ namespace pcs
 
         if (e == nullptr) return false;
         
-
         *event = e;
         return true;
     }
 
-    Scene::Scene() : state(NONE)
+    Scene::Scene(float FOV) : 
+        Data::Status<SceneState>(SceneState::None),
+        camera( FOV )
     {
+        PS_CORE_DEBUG("Constructing Scene");
 
+        getValues() = {
+            "Running",
+            "Error",
+            "Finished",
+            "None"
+        };
     }
 
     Scene::~Scene()
     {
 
-    }
-
-    SceneState Scene::getState() const
-    {
-        return state;
     }
 }

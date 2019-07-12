@@ -4,7 +4,8 @@
 
 namespace pcs
 {
-    class ShaderProgram : public rend::RenderObject, public Data::ObjectID
+    class ShaderProgram : 
+        public rend::RenderObject, public Data::ObjectID<ShaderProgram>
     {
         std::vector<Shader*> shaders;
 

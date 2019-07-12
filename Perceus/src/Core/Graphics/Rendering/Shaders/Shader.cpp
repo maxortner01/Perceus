@@ -5,7 +5,7 @@ namespace pcs
     Shader::Shader(ShaderType t) :
         type(t)
     {
-        values = {
+        getValues() = {
             "Vertex",
             "Fragment"
         };

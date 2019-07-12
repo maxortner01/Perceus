@@ -1,29 +1,35 @@
 #include "Perceus/Core/Graphics/Window.h"
-#include "Perceus/Util/Log.h"
 
-#include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
-#include "Perceus/Core/Graphics/Camera.h"
+#include "Perceus/Core/Graphics/Entities/Camera.h"
 #include "Perceus/Core/Engine.h"
+#include "Perceus/Util/Log.h"
+#include "Perceus/Util/Memory/RegTable.h"
+
+#include <iostream>
 
 namespace pcs
 {
-    unsigned int Window::_id = 0;
+    // Window constructor
 
-    // GL Window stuff
-    Window::Window(unsigned int width, unsigned int height)
+    Window::Window(const unsigned int width, const unsigned int height) :
+        RenderSurface(width, height), ObjectUID()
     {
-        values = {
-            "Failed to intialize api",
-            "Failed to create window",
-            "OK",
-            "NONE"
+        PS_CORE_DEBUG("Constructing Window");
+
+        getValues() = {
+			"Ok",
+			"API failed to initialize",
+			"Window failed to create",
+            "None"
         };
 
-        setSize({ (int)width, (int)height });
+        setSize({ width, height });
         
         int windowStatus = rendAPI()->makeWindow(this);
         setStatus((WindowStatus)windowStatus);
     }
+
+	// Window destructor	
 
     Window::~Window()
     {
@@ -31,47 +37,61 @@ namespace pcs
         PS_CORE_WARN("Window ({0}) destroyed", getID());
     }
 
-    Window* Window::Create(unsigned int width, unsigned int height)
+	// Static window creation method
+
+    Window* Window::Create(const unsigned int width, const unsigned int height)
     {
+        using namespace Util::Mem;
+
         Window* win = new Window(width, height);
+        std::cout << "Window made: " << win << std::endl;
+        RegTable::get().registerObject<Window>(win->getID(), win);
 
-        win->ID = ++win->_id;
-
-        if (win->getStatus() != WindowStatus::OK)
+        if (win->getStatus() > WindowStatus::Ok)
             PS_CORE_ERROR("Window ({0}) failed to initialize with status {1}: {2}", 
-                win->getID(), (int)win->getStatus(), getStatusValue((int)win->getStatus()));
+                win->getID(), (int)win->getStatus(), win->getStatusValue());
         else
-            PS_CORE_INFO("Initialized window ({0}). Status {1}", 
-                win->getID(), getStatusValue((int)win->getStatus()));
+            PS_CORE_INFO("Initialized window ({0}). Status {1}: {2}", 
+                win->getID(), (int)win->getStatus(), win->getStatusValue());
 
         return win;
     }
+
+	// Window is open method
 
     bool Window::isOpen()
     {
         return !rendAPI()->shouldClose(this);
     }
 
-    bool Window::clear(Color color)
-    {
-        rendAPI()->clear(color);
-        return true;
-    }
-
     bool Window::render()
     {
-        rendAPI()->test();
         return rendAPI()->swapBuffers(this);
     }
+
+    void Window::bind() 
+    {
+        rendAPI()->makeContextCurrent(this);
+    }
+
+    void Window::unbind() const 
+    {
+
+    }
+
 
     bool Window::pollEvents()
     {
         return rendAPI()->pollEvents(this);
     }
 
+	// Resize window method
+
     bool Window::resize(unsigned int width, unsigned int height)
     {
-        setSize({ (int)width, (int)height });
+        using namespace Util::Mem;
+
+        setSize({ width, height });
         
         // Need to recompute projection matrices on window resize
         std::vector<void*> &c = Engine::get().getCameraDirectory();

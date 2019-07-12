@@ -2,7 +2,7 @@
 
 #include "Perceus/Util/Log.h"
 
-#include "Perceus/Core/Graphics/Renderer.h"
+#include "Perceus/Core/Graphics/Rendering/Renderer.h"
 #include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
 #include "Perceus/Core/Graphics/Rendering/Events/EventHandler.h"
 
@@ -47,12 +47,11 @@ namespace pcs
 
     Engine::Engine()
     {
-        values = {
+        PS_CORE_DEBUG("Constructing Engine");
+        getValues() = {
             "Good",
             "Failed"
         };
-
-        Log::init();
 
         PS_CORE_INFO("Engine initialized");
 
@@ -130,6 +129,6 @@ namespace pcs
 
         frame++;
 
-        return RenderStatus::GOOD;
+        return RenderStatus::Good;
     }
 }

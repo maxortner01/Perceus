@@ -11,9 +11,9 @@ public:
         static int frame;
         
         //getLocation().y += cosf((float)frame / 5000000.f + (getLocation().z * 15.f)) / 100.f;
-        //getRotation().y += 1.f * deltaTime;
+        getRotation().y += 1.f * deltaTime;
 
-        getLocation().z -= 5.f * deltaTime;
+        //getLocation().z -= 5.f * deltaTime;
 
         frame++;
     }
@@ -25,7 +25,6 @@ class MainScreen : public pcs::Scene
 
     pcs::RawModel* rawModel;
     pcs::ShaderProgram program;
-    pcs::Camera camera;
 
     pcs::Texture normalTex;
     pcs::Texture texture;
@@ -36,30 +35,33 @@ protected:
         static unsigned int to;
         //setState(pcs::SceneState::FINISHED);
 
-
-        camera.getLocation().z = -47.f;
-        camera.getLocation().z -= .5f;
-        //camera.getLocation().y = 5.f;
+        //getCamera().getLocation().z = -47.f;
+        //getCamera().getLocation().z -= .5f;
+        getCamera().getLocation().y = 5.f;
+        getCamera().getLocation().z = -45.f;
 
         pcs::Event* event;
         while (pollEvent(&event))
         {
-            if (event->getType() == pcs::EventType::KeyDown)
+            if (event->getType() == pcs::EventType::KeyPress)
             {
                 pcs::KeyEvent* e = (pcs::KeyEvent*)event;
                 std::cout << e->getKey() << std::endl;
+                if (e->getKey() == 'A')
+                    setStatus(pcs::SceneState::Finished);
             }
         }
         
-        pcs::ForwardRenderer::get().render(models, &program, &camera);
+        pcs::ForwardRenderer::get().render(models, &program, &getCamera());
 
         to++;
     }
 
 public:
     MainScreen() :
-        program(), camera(90.f)
+        program(), pcs::Scene( 40.f )
     {
+        getCamera().makeProjection(10000.f);
         pcs::ParserOBJ parser = pcs::ParserOBJ("Client/res/Sword1/Longsword_LP.obj");
         pcs::VertexArray* vertex = parser.parseFile();
 
@@ -77,8 +79,8 @@ public:
         delete vertex;
         
         pcs::Model* model = new CoolTriangle(rawModel);
-        model->setScale({ .75f, .75f, .75f });
-        //model->setScale({ .1f, .1f, .1f });
+        //model->setScale({ .75f, .75f, .75f });
+        model->setScale({ .1f, .1f, .1f });
         model->setLocation({ 0.f, -5.f, 0.f });
         model->setRotation({ 90.f * 3.14159f / 180.f, 0, 0 });
         models.push_back(model);
@@ -183,6 +185,7 @@ public:
             //"  color = col.xyz * diff;"
             "  vec3 diffuse = light_color * diff;\n"
             "  color = (diffuse + specular) * getAlbedoColor();"
+            "  color = vec3(1, 1, 1);"
             "}\n"
         );
 

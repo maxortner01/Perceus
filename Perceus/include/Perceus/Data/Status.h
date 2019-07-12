@@ -1,28 +1,52 @@
 #pragma once
 
-#include <vector>
+#include "Inc.h"
 
 namespace pcs
 {
 namespace Data
 {
 
+	// Takes an enum class as as a template argument. This is
+	// used to store and retreive various status codes and their
+	// corresponding string values.
     template<class E>
     class Status
     {
         E status;
 
-    protected:
-        inline static std::vector<const char*> values;
+	protected:
+		// Static storage for the string values corresponding
+		// to each of the enum values
+    	static std::vector<std::string> &getValues()
+		{
+			static std::vector<std::string> values;
 
-        bool setStatus(E s) { status = s; return true; }
+			return values;
+		}
+
+		// Set the current Status
+        void setStatus(E s) { status = s; }
 
     public:
+		Status() {}
+		Status(E s) :
+			status(s)
+		{
+			
+		}
+
+		// Returns the status
         E getStatus() const { return status; }
 
+		std::string getStatusValue() const
+		{
+			return getValues()[(int)getStatus()];
+		}
+		
         // Strings for window status codes
-        static const char* getStatusValue(int enumVal) {
-            return values[enumVal];
+        static std::string getStatusFromEnum(int enumVal) {
+            return getValues()[enumVal];
         }
     };
 }
