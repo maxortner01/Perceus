@@ -1,0 +1,12 @@
+<map id="pcs::Scene" name="pcs::Scene">
+<area shape="rect" id="node2" href="$classpcs_1_1Data_1_1Status.html" title="pcs::Data::Status\&lt;\l SceneState \&gt;" alt="" coords="718,5,851,47"/>
+<area shape="rect" id="node3" href="$classpcs_1_1rend_1_1RenderObject.html" title="Class for retreiving the currently selected render API. " alt="" coords="703,71,867,98"/>
+<area shape="rect" id="node4" href="$structpcs_1_1rend_1_1RenderSettings.html" title="Container for choosing various API types. " alt="" coords="419,59,593,86"/>
+<area shape="rect" id="node5" href="$classpcs_1_1Camera.html" title="pcs::Camera" alt="" coords="736,141,833,167"/>
+<area shape="rect" id="node6" href="$classpcs_1_1Transformable3D.html" title="pcs::Transformable3D\l\&lt; float \&gt;" alt="" coords="431,111,581,152"/>
+<area shape="rect" id="node7" href="$classpcs_1_1Transformable.html" title="pcs::Transformable\l\&lt; Vec3\&lt; float \&gt; \&gt;" alt="" coords="232,105,367,147"/>
+<area shape="rect" id="node8" href="$structpcs_1_1Vec3.html" title="pcs::Vec3\&lt; float \&gt;" alt="" coords="5,113,136,139"/>
+<area shape="rect" id="node9" href="$classpcs_1_1Data_1_1ObjectUID.html" title="pcs::Data::ObjectUID" alt="" coords="431,177,581,203"/>
+<area shape="rect" id="node10" href="$classpcs_1_1Data_1_1ObjectID.html" title="pcs::Data::ObjectID\l\&lt; ObjectUID, U64 \&gt;" alt="" coords="229,171,369,212"/>
+<area shape="rect" id="node11" href="$structpcs_1_1Mat4f.html" title="pcs::Mat4f" alt="" coords="464,227,548,254"/>
+</map>
