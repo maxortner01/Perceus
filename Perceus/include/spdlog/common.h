@@ -9,15 +9,22 @@
 #include <chrono>
 #include <initializer_list>
 #include <memory>
-#include <stdexcept>
+#include <exception>
 #include <string>
 #include <type_traits>
 #include <functional>
 
-#if defined(SPDLOG_WCHAR_FILENAMES) || defined(SPDLOG_WCHAR_TO_UTF8_SUPPORT)
-#include <codecvt>
-#include <locale>
+#ifdef _WIN32
+#ifndef NOMINMAX
+#define NOMINMAX // prevent windows redefining min/max
 #endif
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#include <windows.h>
+#endif //_WIN32
 
 #ifdef SPDLOG_COMPILED_LIB
 #undef SPDLOG_HEADER_ONLY
@@ -68,11 +75,6 @@ class sink;
 #if defined(_WIN32) && defined(SPDLOG_WCHAR_FILENAMES)
 using filename_t = std::wstring;
 #define SPDLOG_FILENAME_T(s) L##s
-inline std::string filename_to_str(const filename_t &filename)
-{
-    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> c;
-    return c.to_bytes(filename);
-}
 #else
 using filename_t = std::string;
 #define SPDLOG_FILENAME_T(s) s
@@ -83,12 +85,18 @@ using sink_ptr = std::shared_ptr<sinks::sink>;
 using sinks_init_list = std::initializer_list<sink_ptr>;
 using err_handler = std::function<void(const std::string &err_msg)>;
 
-// string_view type - either std::string_view or fmt::string_view (pre c++17)
-#if defined(FMT_USE_STD_STRING_VIEW)
-using string_view_t = std::string_view;
+template<typename T>
+using basic_string_view_t = fmt::basic_string_view<T>;
+
+using string_view_t = basic_string_view_t<char>;
+
+#ifdef SPDLOG_WCHAR_TO_UTF8_SUPPORT
+#ifndef _WIN32
+#error SPDLOG_WCHAR_TO_UTF8_SUPPORT only supported on windows
 #else
-using string_view_t = fmt::string_view;
-#endif
+using wstring_view_t = basic_string_view_t<wchar_t>;
+#endif // _WIN32
+#endif // SPDLOG_WCHAR_TO_UTF8_SUPPORT
 
 #if defined(SPDLOG_NO_ATOMIC_LEVELS)
 using level_t = details::null_atomic_int;

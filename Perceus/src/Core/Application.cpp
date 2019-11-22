@@ -6,42 +6,47 @@ namespace pcs
 {
     void Application::pushScene(Scene* s)
     {
-        scenes.push_back(s);
+        PS_CORE_DEBUG("Pushing Scene to Application");
+        scenes.push(s);
     }
 
-    Application::Application()
+    Application::Application(const unsigned int width, const unsigned int height) :
+        engine(new Engine())
     {
-        engine = &Engine::get();
+        PS_CORE_DEBUG("Constructing Application");
+
+        getValues() = {
+            "Reached end of Program",
+            "No Scenes"
+        };
+        
+        engine->getWindow()->resize(width, height);
     }
 
     Application::~Application()
     {
         for (int i = 0; i < scenes.size(); i++)
-            delete scenes[i];
+        {
+            delete scenes.top();
+            scenes.pop();
+        }
 
         delete engine;
     }
 
     int Application::run()
     {
-        if (scenes.size() == 0) return (int)ExitCode::NO_SCENES;
+        if (scenes.size() == 0) return (int)ExitCode::NoScenes;
         
         PS_CORE_DEBUG("Running application");
-        engine->getWindow()->resize(1920, 1080);
         while (engine->getWindow()->isOpen())
         {
-            if (scenes[0]->getState() == pcs::SceneState::FINISHED)
-            {
-                std::vector<Scene*> temp;
-
-                for (int i = 1; i < scenes.size(); i++)
-                    temp.push_back(scenes[i]);
-
-                if (temp.size() == 0) break;
-                scenes = temp;
-            }
-
-            engine->renderScene(scenes[0]);
+            if (scenes.top()->getStatus() == pcs::SceneState::Finished)
+                scenes.pop();
+                
+            if (scenes.size() == 0) break;
+            
+            engine->renderScene(scenes.top());
         }
 
         // while window is open
@@ -52,6 +57,6 @@ namespace pcs
         //
         //   render the scene
 
-        return (int)ExitCode::END_OF_PROGRAM;
+        return (int)ExitCode::EndOfProgram;
     }
 }

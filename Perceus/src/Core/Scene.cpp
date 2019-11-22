@@ -2,45 +2,66 @@
 
 #include "Perceus/Core/Graphics/Rendering/Events/EventHandler.h"
 
+#include "Perceus/Core/Application.h"
+
 #include <iostream>
+
+#include "Perceus/Util/Memory/RegTable.h"
 
 namespace pcs
 {
+    using namespace Util::Mem;
+
     void Scene::_render()
     {
-        state = RUNNING;
+        setStatus(SceneState::Running);
         render();
+        frame++;
     }
 
-    bool Scene::setState(SceneState s)
-    {
-        state = s;
-        return true;
-    }
-
-    bool Scene::pollEvent(Event** event)
+    bool Scene::pollEvent(Event*& event)
     {
         Event* e = EventHandler::get().getEvent();
 
         if (e == nullptr) return false;
         
-
-        *event = e;
+        event = e;
         return true;
     }
 
-    Scene::Scene() : state(NONE)
+    Scene::Scene(Application* app, float FOV, const unsigned int size) : 
+        Data::Status<SceneState>(SceneState::None),
+        current_application(app), 
+        frame(0)
     {
+        PS_CORE_DEBUG("Constructing Scene");
 
+        getValues() = {
+            "Running",
+            "Error",
+            "Finished",
+            "None"
+        };
+
+        camera = new Camera( &app->getCurrentWindow(), FOV );
+        models.reserve(size);
     }
 
     Scene::~Scene()
     {
+        for (int i = 0; i < models.size(); i++)
+            if (models[i]) delete models[i];
 
+        delete camera;
     }
 
-    SceneState Scene::getState() const
+    void Scene::toggleCursor(bool visible) const
     {
-        return state;
+        rendAPI()->toggleCursor(Window::get(0), visible);
+    }
+
+    Application& Scene::getApplication() const
+    {
+        return *current_application;
     }
 }

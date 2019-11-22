@@ -1,22 +1,10 @@
 #include "Perceus/Core/Graphics/Rendering/Events/EventHandler.h"
-#include "Perceus/Core/Graphics/Rendering/Events.h"
-
-#include "Perceus/Core/Graphics/Rendering/Shaders/Shader.h"
-#include "Perceus/Core/Graphics/Rendering/Shaders/ShaderProgram.h"
-
 #include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
-#include "Perceus/Core/Graphics/Rendering/Buffer.h"
-
-#include "Perceus/Core/Graphics/Texture.h"
-#include "Perceus/Core/Graphics/RawModel.h"
-#include "Perceus/Core/Graphics/ForwardRenderer.h"
+#include "Perceus/Core/Graphics/Rendering/Events.h"
 #include "Perceus/Core/Graphics/Window.h"
-#include "Perceus/Util/Log.h"
-
-#include "Perceus/Data/Vector.h"
-
-#include <math.h>
-#include <iostream>
+#include "Perceus/Core/Graphics/Entities/BufferArray.h"
+#include "Perceus/Core/Graphics/Rendering/Shaders/ShaderProgram.h"
+#include "Perceus/Core/Graphics/Texture.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -25,9 +13,20 @@ namespace pcs
 {
 namespace rend
 {
+    /* CALL BACKS */
     void window_close_callback(GLFWwindow* window)
     {
         EventHandler::get().pushEvent<WindowClosedEvent>();
+    }
+
+    void window_resize_callback(GLFWwindow* window, int width, int height)
+    {
+        Window* win = Window::get((void* const)window);
+        if (!win) return;
+
+        win->resize(width, height);
+        
+        EventHandler::get().pushEvent<WindowResizeEvent>();
     }
 
     void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -40,7 +39,13 @@ namespace rend
             EventHandler::get().pushEvent<KeyDownEvent>(key);
     }
 
-    bool OpenAPI::initialize()
+    void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+    {
+        EventHandler::get().pushEvent<Mouse>(xpos, ypos);
+    }
+
+    /* FUNCTION DEFINITIONS */
+    bool OpenAPI::initialize() const
     {
         if (!glfwInit())
             return false;
@@ -48,9 +53,29 @@ namespace rend
         return true;
     }
 
-    bool OpenAPI::terminate()
+    bool OpenAPI::terminate() const
     {
         glfwTerminate();
+
+        return true;
+    }
+
+    double OpenAPI::getTime() const
+    {
+        return glfwGetTime();
+    }
+
+    bool OpenAPI::renderInstanced(unsigned int vertexCount, unsigned int count)
+    {
+        renderCalls++;
+
+        glDrawElementsInstanced(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, nullptr, count);
+
+        PS_CORE_DEBUG("Rendering {0} objects ({1} vertices)", count, vertexCount * count);
+
+        getObjectCount()  += count;
+        getVertexCount()  += vertexCount * count;
+        getPolygonCount() += (int)((float)vertexCount * (float)count / 3.f);
 
         return true;
     }
@@ -61,27 +86,36 @@ namespace rend
 
         if (!window)
         {
-            return (int)WindowStatus::WINDOW_CREATION_FAILED;
+            return (int)WindowStatus::CreationFailure;
         }
 
+        glfwWindowHint(GLFW_REFRESH_RATE, 60);
+
         glfwMakeContextCurrent((GLFWwindow*)*window->getAPILoc());
+        current_contex = window->getID();
 
         if (glewInit() != GLEW_OK)
         {
             PS_CORE_ERROR("Failure to initialize OpenGL");
-            return (int)WindowStatus::API_INIT_FAILED;
+            return (int)WindowStatus::APIInitFailure;
         }
 
         PS_CORE_INFO("OpenGL Initialized Successfully");
         PS_CORE_INFO("Running OpenGL version {0}", glGetString(GL_VERSION));
         
+        // Setting Callbacks
         glfwSetWindowCloseCallback((GLFWwindow*)*window->getAPILoc(), window_close_callback);
+        glfwSetWindowSizeCallback((GLFWwindow*)*window->getAPILoc(), window_resize_callback);
         glfwSetKeyCallback((GLFWwindow*)*window->getAPILoc(), key_callback);
+        glfwSetCursorPosCallback((GLFWwindow*)*window->getAPILoc(), mouse_callback);
 
-        return (int)WindowStatus::OK;
+        glfwSetWindowUserPointer((GLFWwindow*)window->getAPILoc(), &window->getID());
+
+
+        return (int)WindowStatus::Ok;
     }
 
-    int OpenAPI::destroyWindow(Window* window)
+    int OpenAPI::destroyWindow(Window* window) const
     {
         glfwDestroyWindow((GLFWwindow*)*window->getAPILoc());
 
@@ -116,62 +150,48 @@ namespace rend
         return true;
     }
 
-    double OpenAPI::getTime() const
-    {
-        return glfwGetTime();
-    }
-
-    void OpenAPI::test() const
-    {
-        static int frame;
-
-        //BufferArray bufferArray = BufferArray();
-        //bufferArray.bindBuffer(BufferIndex::Vertices, 2, vertices);
-
-        //bufferArray.getBuffer(BufferIndex::Vertices).bind();
-
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        //bufferArray.getBuffer(BufferIndex::Vertices).unbind();
-
-        //glBegin(GL_TRIANGLES);
-//
-        //glColor3f(1, 0, 0);
-        //glVertex2f(-.5f, -.5f);
-//
-        //glColor3f(1, 1, 0);
-        //glVertex2f(.5f, -.5f );
-//
-        //glColor3f(1, 0, 1);
-        //glVertex2f(0, .5f);
-//
-        //glEnd();
-
-        frame++;
-    }
-
     bool OpenAPI::clear(Color color) const
     {
         glClearColor(color.r, color.g, color.b, color.a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         return true;
+    }
+
+    void OpenAPI::makeContextCurrent(Window* window)
+    {
+        GLFWwindow* w = (GLFWwindow*)*window->getAPILoc();
+        glfwMakeContextCurrent(w);
+        current_contex = window->getID();
     } 
 
-    bool OpenAPI::renderInstanced(unsigned int vertexCount, unsigned int count)
+    u_int64_t OpenAPI::getCurrentContext() const 
     {
-        renderCalls++;
+        return current_contex;
+    }
+    
+    bool OpenAPI::isKeyDown(Window* window, const char c) const 
+    {
+        GLFWwindow* w = (GLFWwindow*)*(window->getAPILoc());
+        if (glfwGetKey(w, c) == GLFW_PRESS) return true;
 
-        glDrawElementsInstanced(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, nullptr, count);
+        return false;
+    }
+    
+    void OpenAPI::setMousePos(Window* window, const Vec2d position) const
+    {
+        GLFWwindow* w = (GLFWwindow*)*(window->getAPILoc());
+        glfwSetCursorPos(w, position.x, position.y);
+    }
 
-        PS_CORE_DEBUG("Rendering {0} objects ({1} vertices)", count, vertexCount * count);
+    void OpenAPI::toggleCursor(Window* window, bool visible) const
+    {
+        GLFWwindow* w = (GLFWwindow*)*(window->getAPILoc());
+        
+        GLenum type = GLFW_CURSOR_DISABLED;
+        if (visible) type = GLFW_CURSOR_NORMAL;
 
-        getObjectCount() += count;
-        getVertexCount() += vertexCount * count;
-        getPolygonCount() += (int)((float)vertexCount * (float)count / 3.f);
-
-        //glDrawArrays(GL_TRIANGLES, 0, vertexCount);
-        return true;
+        glfwSetInputMode(w, GLFW_CURSOR, type);
     }
 
     void OpenAPI::makeBuffer(Buffer* buffer) const
@@ -193,7 +213,7 @@ namespace rend
         glBufferData(GL_ARRAY_BUFFER, bytesize, data, GL_DYNAMIC_DRAW);
     }
 
-    void OpenAPI::bindBufferMatrixData(Buffer* buffer, std::vector<Mat4f> &matrices) const
+    void OpenAPI::bindBufferMatrixData(Buffer* buffer, const std::vector<Mat4f> &matrices) const
     {
         buffer->bind();
         rawDataBind(matrices.size() * 4 * 4 * sizeof(float), &matrices[0]);
@@ -311,6 +331,15 @@ namespace rend
         unsigned int vertexID   = program->getShader(ShaderType::Vertex  ).getID();
         unsigned int fragmentID = program->getShader(ShaderType::Fragment).getID();
 
+        for (int i = 0; i < (int)ShaderType::Count; i++)
+        {
+            Shader* shader = &program->getShader( (ShaderType)i );
+            if (shader->getStatus() != ShaderStatus::CompileSucceeded)
+            {
+                PS_CORE_ERROR("Shader Status Error! Status {0}: {1}", (int)shader->getStatus(), shader->getStatusValue());
+            }
+        }
+
         // Attach shaders and link program
         glAttachShader(program->getID(), vertexID);
         glAttachShader(program->getID(), fragmentID);
@@ -409,7 +438,7 @@ namespace rend
 
         shader->getID() = glCreateShader(type);
 
-        PS_CORE_INFO("{0} Shader ({1}) Created Successfully", shader->getStatusValue((int)shader->getType()), shader->getID());
+        PS_CORE_INFO("{0} Shader ({1}) Created Successfully", shader->getStatusFromEnum((int)shader->getType()), shader->getID());
 
         return true;
     }
@@ -422,27 +451,27 @@ namespace rend
         int result = 0;
         int infoLogLength;
 
-        glGetShaderiv(shader->getID(), GL_COMPILE_STATUS, &result);
+        glGetShaderiv(shader->getID(), GL_COMPILE_STATUS,  &result);
         glGetShaderiv(shader->getID(), GL_INFO_LOG_LENGTH, &infoLogLength);
         if (infoLogLength > 0)
         {
             std::vector<char> errorMessage(infoLogLength + 1);
             glGetShaderInfoLog(shader->getID(), infoLogLength, nullptr, &errorMessage[0]);
             PS_CORE_ERROR("Error compiling {0} shader ({1}): {2}", 
-                shader->getStatusValue((int)shader->getType()), shader->getID(), std::string(&errorMessage[0]));
+                shader->getStatusFromEnum((int)shader->getType()), shader->getID(), std::string(&errorMessage[0]));
 
             return false;
         }
 
-        PS_CORE_INFO("Successfully compiled {0} shader ({1})",
-            shader->getStatusValue((int)shader->getType()), shader->getID());
+        PS_CORE_INFO("Successfully compiledshader ({0})",
+            shader->getID());
 
         return true;
     }
 
     bool OpenAPI::destroyShader(Shader* shader) const
     {
-        PS_CORE_DEBUG("{0} shader ({1}) destroyed", shader->getStatusValue((int)shader->getType()), shader->getID());
+        PS_CORE_DEBUG("{0} shader ({1}) destroyed", shader->getStatusFromEnum((int)shader->getType()), shader->getID());
         glDeleteShader(shader->getID());
         return true;
     }

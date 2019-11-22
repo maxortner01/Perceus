@@ -5,6 +5,11 @@
 
 namespace pcs
 {
+    /**
+     * @brief Class that handles rotation, translation, and scale.
+     * 
+     * @tparam T Type to store values as
+     */
     template<typename T>
     class Transformable
     {
@@ -13,25 +18,37 @@ namespace pcs
         T scale;
 
     public:
+        /// Gets the current locations
         T      &getLocation()    { return location; }
-        bool    setLocation(T l) { location = l; return true; }
+        // Sets the current location
+        void    setLocation(T l) { location = l;    }
 
+        /// Gets the current rotation
         T      &getRotation()    { return rotation; }
-        bool    setRotation(T r) { rotation = r; return true; }
+        // Sets the current rotation
+        void    setRotation(T r) { rotation = r;    }
 
+        /// Gets the current scale
         T      &getScale()       { return scale; }
-        bool    setScale(T s)    { scale = s; return true; }
+        // Sets the current scale
+        void    setScale(T s)    { scale = s;    }
     };
 
+    /**
+     * @brief Class that handles 2-Dimensional Transformations
+     * 
+     * @tparam T Type to store values as
+     */
     template<typename T>
-    class Transformable2D : public Sizable<T>, public Transformable<Vec2<T>>
-    {
+    class Transformable2D : public Transformable<Vec2<T>>
+    {    };
 
-    };
-
+    /**
+     * @brief Class that handles 3-Dimensional Transformations
+     * 
+     * @tparam T Type to store values as
+     */
     template<typename T>
-    class Transformable3D : public Sizable<T>, public Transformable<Vec3<T>>
-    {
-
-    };
+    class Transformable3D : public Transformable<Vec3<T>>
+    {    };
 }

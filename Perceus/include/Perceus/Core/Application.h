@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Scene.h"
 #include "Engine.h"
 
-#include <vector>
+#include "Perceus/Data/Status.h"
+#include "Perceus/Data/Inc.h"
 
 namespace pcs
 {
@@ -11,42 +11,39 @@ namespace pcs
     // Exit Code
     enum class ExitCode
     {
-        END_OF_PROGRAM,
-        NO_SCENES
+        EndOfProgram,
+        NoScenes
     };
 
-    // Strings for exit codes
-    const char* getExitValue(int enumVal)
-    {
-        return (const char *[])
-        {
-            "Reached end of Program",
-            "No Scenes to Render"
-        }[enumVal];
-    }
-
-    class Application
+    /**
+     * @brief Handles and runs the entire engine process.
+     * This is where the main loop is, this holds the engine.
+     * 
+     */
+    class PERC_API Application : public Data::Status<ExitCode>
     {
         friend class Scene;
 
-        // Window instance
+        // Engine instance
         Engine* engine;
 
         // Stack of scenes to render, only renders the
         // first item in this list
-        std::vector<Scene*> scenes;
+        std::stack<Scene*> scenes;
 
     protected:
         void pushScene(Scene* s);
 
     public:
-        Application();
+        Application(const unsigned int width, const unsigned int height);
 
         // Handle engine and scene deletion
         virtual ~Application();
 
         // Initialize the engine and run the application
         int run();
+
+        Window &getCurrentWindow() { return *engine->getWindow(); }
     };
 
     // To be defined by the client
