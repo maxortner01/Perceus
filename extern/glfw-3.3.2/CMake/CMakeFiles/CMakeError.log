@@ -1,0 +1,22 @@
+Performing C SOURCE FILE Test _GLFW_HAS_64ASLR failed with the following output:
+Change Dir: C:/Users/Max/Desktop/Perceus/extern/glfw-3.3.2/CMake/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe cmTC_a8d17/fast && C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/mingw32-make.exe -f CMakeFiles\cmTC_a8d17.dir\build.make CMakeFiles/cmTC_a8d17.dir/build
+mingw32-make.exe[1]: Entering directory 'C:/Users/Max/Desktop/Perceus/extern/glfw-3.3.2/CMake/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a8d17.dir/src.c.obj
+C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe   -D_GLFW_HAS_64ASLR -Wl,--high-entropy-va   -o CMakeFiles\cmTC_a8d17.dir\src.c.obj   -c C:\Users\Max\Desktop\Perceus\extern\glfw-3.3.2\CMake\CMakeFiles\CMakeTmp\src.c
+Linking C executable cmTC_a8d17.exe
+"C:\Program Files\CMake\bin\cmake.exe" -E cmake_link_script CMakeFiles\cmTC_a8d17.dir\link.txt --verbose=1
+"C:\Program Files\CMake\bin\cmake.exe" -E remove -f CMakeFiles\cmTC_a8d17.dir/objects.a
+C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\ar.exe cr CMakeFiles\cmTC_a8d17.dir/objects.a @CMakeFiles\cmTC_a8d17.dir\objects1.rsp
+C:\PROGRA~2\MINGW-~1\I686-8~1.0-P\mingw32\bin\gcc.exe  -D_GLFW_HAS_64ASLR -Wl,--high-entropy-va    -Wl,--whole-archive CMakeFiles\cmTC_a8d17.dir/objects.a -Wl,--no-whole-archive  -o cmTC_a8d17.exe -Wl,--out-implib,libcmTC_a8d17.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cmTC_a8d17.dir\linklibs.rsp
+C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/../../../../i686-w64-mingw32/bin/ld.exe: unrecognized option '--high-entropy-va'
+C:/PROGRA~2/MINGW-~1/I686-8~1.0-P/mingw32/bin/../lib/gcc/i686-w64-mingw32/8.1.0/../../../../i686-w64-mingw32/bin/ld.exe: use the --help option for usage information
+collect2.exe: error: ld returned 1 exit status
+mingw32-make.exe[1]: *** [CMakeFiles\cmTC_a8d17.dir\build.make:88: cmTC_a8d17.exe] Error 1
+mingw32-make.exe[1]: Leaving directory 'C:/Users/Max/Desktop/Perceus/extern/glfw-3.3.2/CMake/CMakeFiles/CMakeTmp'
+mingw32-make.exe: *** [Makefile:120: cmTC_a8d17/fast] Error 2
+
+
+Source file was:
+int main(void) { return 0; }
