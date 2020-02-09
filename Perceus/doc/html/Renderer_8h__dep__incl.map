@@ -1,8 +1,0 @@
-<map id="include/Perceus/Core/Graphics/Rendering/Renderer.h" name="include/Perceus/Core/Graphics/Rendering/Renderer.h">
-<area shape="rect" id="node2" href="$ForwardRenderer_8h.html" title="include/Perceus/Core\l/Graphics/Rendering/Forward\lRenderer.h" alt="" coords="103,95,295,151"/>
-<area shape="rect" id="node6" href="$Engine_8cpp.html" title="src/Core/Engine.cpp" alt="" coords="319,109,461,136"/>
-<area shape="rect" id="node7" href="$Renderer_8cpp.html" title="src/Core/Graphics/Rendering\l/Renderer.cpp" alt="" coords="485,102,676,143"/>
-<area shape="rect" id="node3" href="$Core_8h.html" title="include/Perceus/Core.h" alt="" coords="21,206,180,233"/>
-<area shape="rect" id="node5" href="$ForwardRenderer_8cpp.html" title="src/Core/Graphics/Rendering\l/ForwardRenderer.cpp" alt="" coords="204,199,395,240"/>
-<area shape="rect" id="node4" href="$OpenAPI_8cpp.html" title="src/Core/Graphics/Rendering\l/OpenAPI.cpp" alt="" coords="5,288,196,329"/>
-</map>
