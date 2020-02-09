@@ -59,6 +59,6 @@ namespace pcs
 
         vertexBuff->unbind();
 
-        return (int)RenderFlag::GOOD;
+        return (int)RenderFlag::Good;
     }
 }

@@ -18,8 +18,9 @@
 	<Library>
 	    <dir>./extern/glfw-3.3/build/src</dir>
 	    <file>glfw3</file>
-	    <file>X11</file>
-	    <file>GL</file>
+        <file>opengl32</file>
+	    <!-- <file>X11</file>
+	    <file>GL</file> -->
 	</Library>
 	<proj link="false" flags="GLEW_STATIC">./extern/glew-2.1.0/glew.proj</proj>
     </Dependancies>

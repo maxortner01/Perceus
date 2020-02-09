@@ -1,8 +1,5 @@
 #include "Perceus/Core/Graphics/Rendering/Renderer.h"
 
-#include <iostream>
-#include <thread>
-
 namespace pcs
 {
     /*

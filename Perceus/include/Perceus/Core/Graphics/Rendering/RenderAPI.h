@@ -4,7 +4,13 @@
 #include "Perceus/Data/Matrix.h"
 #include "Perceus/Data/Color.h"
 
-#include <vector>
+#include "Perceus/Data/Inc.h"
+
+#ifdef WIN32
+
+typedef unsigned long long int u_int64_t;
+
+#endif
 
 namespace pcs
 {

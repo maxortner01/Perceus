@@ -11,8 +11,8 @@ namespace pcs
 {
     enum class RenderFlag
     {
-        GOOD,
-        ERROR
+        Good,
+        Error
     };
 
     class Renderer : public rend::RenderObject
