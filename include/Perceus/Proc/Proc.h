@@ -1,3 +1,13 @@
+/**
+ * @file Proc.h
+ * @author Max Ortner
+ * @brief Definitions for outputting to a DLL
+ * @date 2020-02-08
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #pragma once
 
 #ifndef PERCEUS_STATIC
