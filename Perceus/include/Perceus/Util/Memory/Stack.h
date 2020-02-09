@@ -6,7 +6,11 @@
 namespace pcs
 {
     template<typename T>
+<<<<<<< HEAD
     class Stack
+=======
+    class bStack
+>>>>>>> master
     {
         size_t _asize;
         size_t _size;

@@ -2,11 +2,13 @@
 
 #include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
 
+#include "Perceus/Core/Graphics/Rendering/ForwardRenderer.h"
+
 namespace pcs
 {
 namespace rend
 {
-    RenderSettings RenderObject::settings;
+    RenderSettings   RenderObject::settings;
 
     RenderAPI* RenderObject::rendAPI()
     {

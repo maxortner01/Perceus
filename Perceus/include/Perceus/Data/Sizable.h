@@ -4,6 +4,10 @@
 
 namespace pcs
 {
+    /**
+     * @brief Basic functionality for something that has a width and height.
+     * @tparam T Type of the variables that store the width and height.
+     */
     template<typename T>
     struct Sizable
     {

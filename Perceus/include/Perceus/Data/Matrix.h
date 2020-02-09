@@ -17,6 +17,11 @@ namespace pcs
             }
         }
 
+        float &operator() (const unsigned int r, const unsigned int c)
+        {
+            return m[r][c];
+        }
+
         static Mat4f makeIdentity()
         {
             Mat4f mat = Mat4f();
@@ -62,7 +67,7 @@ namespace pcs
             matZ.m[1][0] =  sinf(rot.z);
             matZ.m[1][1] =  cosf(rot.z);
 
-            return matY * matZ * matX;
+            return matZ * matX * matY;
         }
 
         // Static function for generating scale matrix

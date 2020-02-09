@@ -7,7 +7,7 @@
 
 namespace pcs
 {
-    class File
+    class PERC_API File
     {
     protected:
         const char* fileLocation;

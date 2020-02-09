@@ -6,10 +6,15 @@
 
 #include "Perceus/Data/Inc.h"
 
+<<<<<<< HEAD
 #ifdef WIN32
 
 typedef unsigned long long int u_int64_t;
 
+=======
+#if defined(WIN32) || defined(_WIN32)
+    typedef unsigned long long int u_int64_t;
+>>>>>>> master
 #endif
 
 namespace pcs
@@ -47,12 +52,23 @@ namespace rend
         bef bool  resizeWindow(Window* window, unsigned int width, unsigned int height) const aft;\
         bef bool  clear(Color color) const aft;\
         bef void  makeContextCurrent(Window* window) aft;\
+<<<<<<< HEAD
         bef u_int64_t getCurrentContext() const aft;
+=======
+        bef u_int64_t getCurrentContext() const aft;\
+        bef bool  isKeyDown(Window* window, const char c) const aft;\
+        bef void  setMousePos(Window* window, const Vec2d position) const aft;\
+        bef void  toggleCursor(Window* window, bool visible) const aft;
+>>>>>>> master
 
     #define BUFFER_METHODS(bef, aft)\
         bef void makeBuffer(Buffer* buffer) const aft;\
         bef void destroyBuffer(Buffer* buffer) const aft;\
+<<<<<<< HEAD
         bef void bindBufferMatrixData(Buffer* buffer, std::vector<Mat4f> &matrices) const aft;\
+=======
+        bef void bindBufferMatrixData(Buffer* buffer, const std::vector<Mat4f> &matrices) const aft;\
+>>>>>>> master
         bef void unbindBuffer(BufferType type = BufferType::Vertex) const aft;\
         bef void bindBuffer(Buffer* buffer, BufferType type = BufferType::Vertex) const aft;\
         bef void bindBufferData(unsigned int bytesize, const void* data, unsigned int members, unsigned int index, bool divided = true, BufferType type = BufferType::Vertex) const aft;

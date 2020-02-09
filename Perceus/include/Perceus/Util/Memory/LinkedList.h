@@ -38,7 +38,11 @@ namespace Util
     // Push function
 
     template<typename T>
+<<<<<<< HEAD
     void LinkedList<T>::push(T&& val)
+=======
+    void Linkedstd::vector<T>::push(T&& val)
+>>>>>>> master
     {
         _Point* p = new _Point;
         p->value = T(std::forward<T>(val));
@@ -60,7 +64,11 @@ namespace Util
     // Size function
 
     template<typename T>
+<<<<<<< HEAD
     size_t LinkedList<T>::size() const
+=======
+    size_t Linkedstd::vector<T>::size() const
+>>>>>>> master
     {
         return _size;
     }
@@ -68,7 +76,11 @@ namespace Util
     // Index operator overload
 
     template<typename T>
+<<<<<<< HEAD
     T &LinkedList<T>::operator[](size_t index)
+=======
+    T &Linkedstd::vector<T>::operator[](size_t index)
+>>>>>>> master
     {
         _Point p = first;
 

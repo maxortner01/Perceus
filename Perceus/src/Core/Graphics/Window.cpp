@@ -5,10 +5,18 @@
 #include "Perceus/Util/Log.h"
 #include "Perceus/Util/Memory/RegTable.h"
 
+<<<<<<< HEAD
 #include <iostream>
 
 namespace pcs
 {
+=======
+
+namespace pcs
+{
+    List<Window*> Window::windows;
+
+>>>>>>> master
     // Window constructor
 
     Window::Window(const unsigned int width, const unsigned int height) :
@@ -35,6 +43,18 @@ namespace pcs
     {
         rendAPI()->destroyWindow(this);
         PS_CORE_WARN("Window ({0}) destroyed", getID());
+
+        //camera_directory.empty();
+        //unsigned int size = camera_directory.size();
+        //for (int i = 0; i < size; i++)
+        //{
+        //    if (camera_directory.top())
+        //        std::free(camera_directory.top());
+        //        
+        //    camera_directory.pop();
+        //}
+
+        camera_directory.clear();
     }
 
 	// Static window creation method
@@ -44,8 +64,13 @@ namespace pcs
         using namespace Util::Mem;
 
         Window* win = new Window(width, height);
+<<<<<<< HEAD
         std::cout << "Window made: " << win << std::endl;
         RegTable::get().registerObject<Window>(win->getID(), win);
+=======
+        windows.push(win);
+        //RegTable::get().registerObject<Window>(win->getID(), win);
+>>>>>>> master
 
         if (win->getStatus() > WindowStatus::Ok)
             PS_CORE_ERROR("Window ({0}) failed to initialize with status {1}: {2}", 
@@ -57,15 +82,51 @@ namespace pcs
         return win;
     }
 
+<<<<<<< HEAD
+	// Window is open method
+
+    bool Window::isOpen()
+=======
+    Window* Window::get(void* const ptr)
+>>>>>>> master
+    {
+        for (int i = 0; i < windows.size(); i++)
+            if (windows[i]->apiPTR == ptr)
+                return windows[i];
+
+		return nullptr;
+    }
+        
+    Window* Window::get(const int index)
+    {
+        return windows[index];
+    }
+
+<<<<<<< HEAD
+    bool Window::render()
+    {
+        return rendAPI()->swapBuffers(this);
+    }
+
+    void Window::bind() 
+    {
+        rendAPI()->makeContextCurrent(this);
+=======
 	// Window is open method
 
     bool Window::isOpen()
     {
         return !rendAPI()->shouldClose(this);
+>>>>>>> master
     }
 
-    bool Window::render()
+    void Window::unbind() const 
     {
+<<<<<<< HEAD
+
+    }
+
+=======
         return rendAPI()->swapBuffers(this);
     }
 
@@ -75,10 +136,8 @@ namespace pcs
     }
 
     void Window::unbind() const 
-    {
-
-    }
-
+    {   }
+>>>>>>> master
 
     bool Window::pollEvents()
     {
@@ -94,11 +153,26 @@ namespace pcs
         setSize({ width, height });
         
         // Need to recompute projection matrices on window resize
-        std::vector<void*> &c = Engine::get().getCameraDirectory();
-        PS_CORE_DEBUG("Recomputing Projections for {0} camera(s) for window size {1}x{2}", c.size(), width, height);
-        for (int i = 0; i < c.size(); i++)
-            static_cast<Camera*>(c.at(i))->makeProjection();
+        PS_CORE_INFO("Recomputing Projections for {0} camera(s) for window size {1}x{2}", camera_directory.size(), width, height);
 
+        //for (int i = 0; i < camera_directory.size(); i++)
+        //    std::cout << camera_directory[i]->getID() << "\n";
+
+        unsigned int size = camera_directory.size();
+        for (int i = 0; i < size; i++)
+            camera_directory[i]->makeProjection();
+                    
         return rendAPI()->resizeWindow(this, width, height);
     }
+<<<<<<< HEAD
+=======
+
+    void Window::pushCamera(Camera* camera)
+    {
+        std::cout << "pushing camera " << camera << " to list,";
+        std::cout << " so far of size " << camera_directory.size() << "\n";
+        camera_directory.push(camera);
+        std::cout << "Done!\n";
+    }
+>>>>>>> master
 }

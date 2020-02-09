@@ -9,21 +9,47 @@
 
 namespace pcs
 {
+<<<<<<< HEAD
     class Camera : 
         public Transformable3D<float>, public Data::ObjectUID
     {
         Mat4f projection;
+=======
+    enum class Direction
+    {
+        Forward,
+        Backward,
+        Left,
+        Right
+    };
+
+    class PERC_API Camera : 
+        public Transformable3D<float>, public Data::ObjectUID
+    {
+        Mat4f projection;
+        
+        Window* window;
+>>>>>>> master
 
         float _FOV, _zNear, _zFar;
 
     public:
+<<<<<<< HEAD
         Camera(float FOV = 90.f, float zNear = .01f, float zFar = 1000.f);
+=======
+        Camera(Window* w, float FOV = 90.f, float zNear = .01f, float zFar = 1000.f);
+>>>>>>> master
 
         ~Camera()
         {
             PS_CORE_DEBUG("Camera destroyed");
         }
 
+<<<<<<< HEAD
+=======
+        void move(const Direction direction, const float speed);
+
+>>>>>>> master
         Mat4f getView();
 
         Mat4f getProjection() const

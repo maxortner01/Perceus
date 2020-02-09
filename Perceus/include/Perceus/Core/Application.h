@@ -20,29 +20,38 @@ namespace pcs
      * This is where the main loop is, this holds the engine.
      * 
      */
+<<<<<<< HEAD
     class Application : public Data::Status<ExitCode>
+=======
+    class PERC_API Application : public Data::Status<ExitCode>
+>>>>>>> master
     {
         friend class Scene;
 
-        // Window instance
+        // Engine instance
         Engine* engine;
 
         // Stack of scenes to render, only renders the
         // first item in this list
         std::stack<Scene*> scenes;
+<<<<<<< HEAD
         //std::vector<Scene*> scenes;
+=======
+>>>>>>> master
 
     protected:
         void pushScene(Scene* s);
 
     public:
-        Application();
+        Application(const unsigned int width, const unsigned int height);
 
         // Handle engine and scene deletion
         virtual ~Application();
 
         // Initialize the engine and run the application
         int run();
+
+        Window &getCurrentWindow() { return *engine->getWindow(); }
     };
 
     // To be defined by the client

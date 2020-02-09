@@ -1,5 +1,11 @@
 #include "Perceus/Core/Graphics/Rendering/Renderer.h"
 
+<<<<<<< HEAD
+=======
+#include <iostream>
+#include <thread>
+
+>>>>>>> master
 namespace pcs
 {
     /*
@@ -85,12 +91,32 @@ namespace pcs
         return elapsed_time;
     }
 
+<<<<<<< HEAD
     int Renderer::render(std::vector<Model*> models, ShaderProgram* shader, Camera* camera) const
     {
         RawModel* rawModel = models.at(0)->getRawModel();
 
         processModels(rawModel, models);
 
+=======
+    RenderFlag Renderer::render(std::vector<Model*> models, ShaderProgram* shader, Camera* camera) const
+    {
+        // If there are no models, exit
+        if (models.size() == 0) return RenderFlag::Good;
+
+        RawModel* rawModel = models.at(0)->getRawModel();
+
+        // If the RawModel does not exist, exit
+        if (!rawModel) return RenderFlag::NoRawModel;
+
+        // If the RawModel doesn't contain any vertices, exit
+        if (rawModel->getBuffer(rend::BufferIndex::Vertices).getCount() == 0) return RenderFlag::NoVertices;
+
+        // Process the transformation matrices for each model
+        processModels(rawModel, models);
+
+        // Push the rawModel to the renderer
+>>>>>>> master
         return render(rawModel, shader, camera, models.size());
     }
 }

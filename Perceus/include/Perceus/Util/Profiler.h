@@ -17,6 +17,7 @@ namespace pcs
 {
     class Profiler : public Data::Singleton<Profiler>
     {
+<<<<<<< HEAD
 #ifndef WIN32
         // https://stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
         static clock_t lastCPU, lastSysCPU, lastUserCPU;
@@ -138,16 +139,45 @@ namespace pcs
             return percent * 100;
         }
 #endif
+=======
+#if defined(WIN32) or defined(_WIN32)
+        static ULARGE_INTEGER lastCPU, lastSysCPU, lastUserCPU;
+        static int numProcessors;
+        static HANDLE self;
+#else
+        static clock_t lastCPU, lastSysCPU, lastUserCPU;
+        static int numProcessors;
+		
+        int getValue() const;
+#endif
+        void init() const;
+        double getCurrentValue() const;
+        int parseLine(char* line) const;
+
+>>>>>>> master
     public:
         /**
          * @brief Gets the current memory usage in kilobytes.
          * 
          * @return unsigned int Amount of virtual memory used in kilobytes.
          */
+<<<<<<< HEAD
+=======
+#if !defined(WIN32) or !defined(_WIN32)
+>>>>>>> master
         unsigned int getMemoryUsage() const
         {
             return getValue();
         }
+<<<<<<< HEAD
+=======
+#else
+		unsigned int getMemoryUsage() const
+		{
+			return 0;
+		}
+#endif
+>>>>>>> master
 
         double getCPUPercent() const
         {

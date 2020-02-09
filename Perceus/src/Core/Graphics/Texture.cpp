@@ -27,14 +27,15 @@ namespace pcs
         rendAPI()->destroyTexture(this);
     }
 
-    void Texture::bind(unsigned int layer) const
+    void Texture::bind(unsigned int layer)
     {
+        current_layer = layer;
         rendAPI()->bindTexture(id, layer);
     }
 
-    void Texture::unbind(unsigned int layer) const
+    void Texture::unbind() const
     {
-        rendAPI()->bindTexture(0, layer);
+        rendAPI()->bindTexture(0, current_layer);
     }
     
     void Texture::loadFromFile(const char* location)
@@ -44,13 +45,6 @@ namespace pcs
         int width, height, channels;
         stbi_set_flip_vertically_on_load(true);
         unsigned char* image = stbi_load(location, &width, &height, &channels, STBI_rgb_alpha);
-
-        /*
-        int size = 0;
-        while (img[size] != '\0') size++;
-
-        PS_CORE_DEBUG("Image dimensions: {0}x{1}. Image size: {2} mb", width, height, (int)((float)size / 1000000.f));
-        */
 
         if (rendAPI()->loadImageToTexture(this, image, width, height))
             PS_CORE_INFO("Texture [ {0} ] loaded successfully", location);

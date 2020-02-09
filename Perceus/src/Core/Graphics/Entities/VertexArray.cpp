@@ -1,5 +1,12 @@
 #include "Perceus/Core/Graphics/Entities/VertexArray.h"
 
+<<<<<<< HEAD
+=======
+#include "Perceus/Data/Triangle.h"
+
+#include <iostream>
+
+>>>>>>> master
 namespace pcs
 {
 
@@ -17,7 +24,17 @@ namespace pcs
 
     std::vector<Vec3f> VertexArray::getNormals()  const
     {
+<<<<<<< HEAD
         getType(Vec3f, normal);
+=======
+        std::vector<Vec3f> v;
+        v.reserve(vertices.size());
+        for (int i = 0; i < vertices.size(); i++)
+            if (vertices[i].normal != Vec3f(0, 0, 0))
+                v.push_back(vertices[i].normal);
+
+        return v;
+>>>>>>> master
     }
 
     std::vector<Vec3f> VertexArray::getVertices() const
@@ -30,6 +47,7 @@ namespace pcs
         getType(Vec2f, tex);
     }
 
+<<<<<<< HEAD
     std::vector<Vec3f> VertexArray::getBitangents() const
     {
         //getType(Vec3f, bitangent);
@@ -38,5 +56,33 @@ namespace pcs
     std::vector<Vec3f> VertexArray::getTangents() const
     {
         getType(Vec3f, tangent);
+=======
+    std::vector<Vec3f> VertexArray::getTangents() const
+    {
+        getType(Vec3f, tangent);
+    }
+
+    void VertexArray::calculateNormals(bool smooth_shading)
+    {
+        for (int i = 0; i < indices.size() / 3; i++)
+        {
+            Triangle tri(
+                vertices[ indices[i * 3 + 0] ].vertex,
+                vertices[ indices[i * 3 + 1] ].vertex,
+                vertices[ indices[i * 3 + 2] ].vertex
+            );
+
+            for (int j = 0; j < 3; j++)
+            {                
+                if (!smooth_shading)
+                    vertices[ indices[i * 3 + j] ].normal += tri.getNormal();
+                else
+                    vertices[ indices[i * 3 + j] ].normal = tri.getNormal();
+            }
+        }
+
+        for (int i = 0; i < vertices.size(); i++)
+            vertices[i].normal = normalize(vertices[i].normal);
+>>>>>>> master
     }
 }

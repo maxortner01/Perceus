@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Perceus/Data/Inc.h"
+
 namespace pcs
 {
 
@@ -14,17 +16,19 @@ namespace pcs
     enum class EventType
     {
         None,
-        WindowClosed,
-        KeyPress, KeyRelease, KeyDown
+        WindowClosed, WindowResize,
+        KeyPress, KeyRelease, KeyDown,
+        MousePosition
     };
 
     enum EventCategory
     {
         WindowEvent   = _BIT(1),
-        KeyboardEvent = _BIT(2)
+        KeyboardEvent = _BIT(2),
+        MouseEvent    = _BIT(3)
     };
 
-    class Event
+    class PERC_API Event
     {
     protected:
         bool handled = false;

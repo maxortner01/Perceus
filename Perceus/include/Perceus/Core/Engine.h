@@ -3,6 +3,7 @@
 #include "Perceus/Data/Singleton.h"
 #include "Perceus/Data/Status.h"
 #include "Perceus/Core/Scene.h"
+#include "Perceus/Core/Graphics/Rendering/Renderer.h"
 
 namespace pcs
 {
@@ -16,6 +17,7 @@ namespace pcs
     };
 
     /**
+<<<<<<< HEAD
      * @brief Handles rendering and holds the window instance.
      */
     class Engine : 
@@ -27,6 +29,27 @@ namespace pcs
 
         /// Window on which to render to
         Window* window;
+=======
+     * @brief Enum for choosing a renderer
+     */
+    enum class CurrentRenderer
+    {
+        ForwardRenderer
+    };
+
+    /**
+     * @brief Handles rendering and holds the window instance.
+     */
+    class PERC_API Engine : 
+        public rend::RenderObject, public Data::Status<RenderStatus>
+    {
+        Renderer* renderer() const;
+
+        /// Window on which to render to
+        Window* window;
+
+        unsigned int fpsLimit;
+>>>>>>> master
         
     public:
         /**
@@ -38,6 +61,11 @@ namespace pcs
          */
         ~Engine();
 
+<<<<<<< HEAD
+=======
+        void setFrameLimit(const unsigned int f) { fpsLimit = f; }
+
+>>>>>>> master
         /**
          * @brief Renders a given scene to the window.
          * 
@@ -53,6 +81,7 @@ namespace pcs
          */
         Window* getWindow() { return window; }
 
+<<<<<<< HEAD
         /**
          * @brief Push a camera to the directory
          * 
@@ -65,5 +94,8 @@ namespace pcs
          * @return std::vector<void*>& Camera Directory list
          */
         std::vector<void*> &getCameraDirectory() { return camera_directory; }
+=======
+        static CurrentRenderer &currentRenderer() { static CurrentRenderer r = CurrentRenderer::ForwardRenderer; return r; }
+>>>>>>> master
     };
 }

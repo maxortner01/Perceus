@@ -4,20 +4,25 @@
 #include "Perceus/Data/Status.h"
 #include "../RenderObject.h"
 
+#include "Perceus/Data/Inc.h"
+
+#include <unordered_map>
 #include <string>
 
 namespace pcs
 {
     enum class ShaderStatus
     {
-
+        CompileFailed,
+        CompileSucceeded,
+        FileDoesNotExist
     };
 
     enum class ShaderType
     {
         Vertex,
         Fragment,
-        COUNT
+        Count
     };
 
     class Shader : 
@@ -26,10 +31,11 @@ namespace pcs
         ShaderType type;
 
     public:
-        Shader(ShaderType t);
-        ~Shader();
+        PERC_API Shader(ShaderType t);
+        PERC_API ~Shader();
 
-        int loadShaderFromString(std::string str);
+        PERC_API int loadFromFile(std::string filename);
+        PERC_API int loadFromString(const std::string &str);
 
         ShaderType getType() const { return type; }
     };

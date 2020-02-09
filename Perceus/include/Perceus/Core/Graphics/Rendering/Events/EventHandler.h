@@ -8,7 +8,7 @@
 
 namespace pcs
 {
-    class EventHandler : public Data::Singleton<EventHandler>
+    class PERC_API EventHandler : public Data::Singleton<EventHandler>
     {
         friend class Engine;
 

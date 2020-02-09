@@ -1,7 +1,13 @@
 #pragma once
 
+<<<<<<< HEAD
 #include <ctime>
 #include <bitset>
+=======
+#include <cstdlib>
+//#include <ctime>
+//#include <bitset>
+>>>>>>> master
 
 namespace pcs
 {
@@ -18,10 +24,18 @@ namespace Data
     class ObjectID
     {
     protected:
+<<<<<<< HEAD
 
         /**
          * @brief Get the next ID
          * 
+=======
+        /// Current ID
+        R id;
+
+        /**
+         * @brief Get the next ID
+>>>>>>> master
          * @return unsigned int Incremented ID
          */
         virtual R getNext()
@@ -30,6 +44,7 @@ namespace Data
             return _id++;
         }
 
+<<<<<<< HEAD
         /// Current ID
         R id;
 
@@ -75,6 +90,57 @@ namespace Data
         }
 
     public:
+=======
+    public:
+        /**
+         * @brief Constructs a new ObjectID
+         */
+        ObjectID() :
+            id(getNext())
+        {
+            
+        }
+
+        /// Gets the ID
+        R &getID() { return id; }
+        
+    };
+
+    /**
+     * @brief Base class that creates a 64-bit unique ID
+     */
+    class ObjectUID : public ObjectID<ObjectUID, U64>
+    {
+        // Generate a unique ID
+        U64 getNext() override
+        {
+			return rand();
+            /*
+            std::bitset<64> bits;
+			
+            // Set the random seed equal to the clock ticks
+            srand((int)clock());
+            for (int i = 0; i < 64; i++)
+            {
+                // Time based
+                if (i % 2 == 0)
+                {
+                    time_t time = std::time(0);
+                    struct tm* now = localtime(&time);
+                    bits[i] = (int)(now->tm_hour + now->tm_min + now->tm_mday + now->tm_sec) % 2;
+                }
+                // Random number based
+                else
+                    bits[i] = rand() % 2;
+                
+            }
+			
+            return bits.to_ullong(); 
+            */
+        }
+
+    public:
+>>>>>>> master
         ObjectUID()
         {
             id = getNext();

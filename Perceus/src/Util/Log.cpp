@@ -2,11 +2,10 @@
 
 #include "spdlog/sinks/stdout_color_sinks.h"
 
+#include <iostream>
+
 namespace pcs
 {
-    spdlog::logger* Log::coreLogger = nullptr;
-    spdlog::logger* Log::clientLogger = nullptr;
-
     bool Log::init()
     {
         spdlog::set_pattern("%^[%X] %n: %v%$");
@@ -17,12 +16,16 @@ namespace pcs
         #else
         coreLogger->set_level(spdlog::level::info);
         #endif
+<<<<<<< HEAD
         //coreLogger->set_level(spdlog::level::debug);
+=======
+>>>>>>> master
 
         clientLogger = spdlog::stdout_color_mt("CLIENT").get();
         clientLogger->set_level(spdlog::level::trace);
 
         PS_CORE_INFO("Logger initialized");
+
         return true;
     }
 }

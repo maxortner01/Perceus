@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cmath>
+
 namespace pcs
 {
     template<typename T>
@@ -99,6 +101,23 @@ namespace pcs
             z /= v;
         }
 
+<<<<<<< HEAD
+=======
+        bool operator==(const Vec3<T>& a) const
+        {
+			return (
+				(a.x == x) &&
+				(a.y == y) &&
+				(a.z == z)
+			);
+        }
+
+        bool operator!=(const Vec3<T>& a) const
+        {
+            return !operator==(a);
+        }
+
+>>>>>>> master
         template<typename R>
         operator Vec3<R>() const
         {
@@ -142,6 +161,7 @@ namespace pcs
     typedef Vec2<float>        Vec2f;
     typedef Vec2<int>          Vec2i;
     typedef Vec2<unsigned int> Vec2u;
+<<<<<<< HEAD
 
     typedef Vec3<double>       Vec3d;
     typedef Vec3<float>        Vec3f;
@@ -152,4 +172,40 @@ namespace pcs
     typedef Vec4<float>        Vec4f;
     typedef Vec4<int>          Vec4i;
     typedef Vec4<unsigned int> Vec4u;
+=======
+
+    typedef Vec3<double>       Vec3d;
+    typedef Vec3<float>        Vec3f;
+    typedef Vec3<int>          Vec3i;
+    typedef Vec3<unsigned int> Vec3u;
+
+    typedef Vec4<double>       Vec4d;
+    typedef Vec4<float>        Vec4f;
+    typedef Vec4<int>          Vec4i;
+    typedef Vec4<unsigned int> Vec4u;
+
+    static float length(const Vec3f& vec)
+    {
+        return sqrtf(powf(vec.x, 2) + powf(vec.y, 2) + powf(vec.z, 2));
+    }
+
+    static Vec3f normalize(const Vec3f& vec)
+    {
+        return vec / length(vec);
+    }
+
+	static float dot(const Vec3f& a, const Vec3f& b)
+	{
+		return a.x * b.x + a.y * b.y + a.z * b.z;
+	}
+
+    static Vec3f cross(const Vec3f& a, const Vec3f b)
+    {
+        return Vec3f(
+            a.y * b.z - a.z * b.y,
+            a.z * b.x - a.x * b.z,
+            a.x * b.y - a.y * b.x
+        );
+    }
+>>>>>>> master
 }

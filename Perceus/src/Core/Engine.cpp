@@ -6,6 +6,13 @@
 #include "Perceus/Core/Graphics/Rendering/OpenAPI.h"
 #include "Perceus/Core/Graphics/Rendering/Events/EventHandler.h"
 
+#include "Perceus/Core/Graphics/Rendering/ForwardRenderer.h"
+#include "Perceus/Util/Profiler.h"
+
+#if !defined(WIN32) || !defined(_WIN32)
+	#include <unistd.h>
+#endif
+
 #include <string>
 
 namespace pcs
@@ -45,8 +52,23 @@ namespace pcs
         return fin;
     }
 
-    Engine::Engine()
+    Renderer* Engine::renderer() const
     {
+<<<<<<< HEAD
+=======
+        switch (currentRenderer()) 
+        {
+            case CurrentRenderer::ForwardRenderer:
+                return &ForwardRenderer::get();
+        }
+
+        return nullptr;
+    }
+
+    Engine::Engine() :
+        fpsLimit(60.0)
+    {
+>>>>>>> master
         PS_CORE_DEBUG("Constructing Engine");
         getValues() = {
             "Good",
@@ -60,9 +82,11 @@ namespace pcs
         // Make variable size
         window = Window::Create(400, 400);
     }
-
+    
     Engine::~Engine()
     {
+        RawModel::flushRawModels();
+
         delete window;
         
         Window::rendAPI()->terminate();
@@ -74,7 +98,8 @@ namespace pcs
     {
         static int frame;
 
-        double start_time = rendAPI()->getTime();
+        const double needed_frame_time = 1.0 / fpsLimit;
+        const double start_time = rendAPI()->getTime();
 
         // Clear the render api draw count
         rendAPI()->getVertexCount() = 0;
@@ -85,25 +110,52 @@ namespace pcs
         window->pollEvents();
         window->clear(Color(0.f, 0.f, 0.f));
         scene->_render();
+        
+        RenderFlag f = renderer()->render(scene->models, &scene->getShaderProgram(), &scene->getCamera());
+        if (f != RenderFlag::Good)
+            PS_CORE_WARN("Renderer exited with code: {0}", (int)f);
+
         window->render();
+
+        // Accomodate for the frame rate limit
+        const double render_time = start_time - rendAPI()->getTime();
+        const double needed_wait = needed_frame_time - render_time;
+
+        if (needed_wait > 0.0)
+        {
+            timespec time;
+            time.tv_sec  = 0;
+            time.tv_nsec = (unsigned long long int)(pow(10, 9) * needed_wait);
+
+#if !defined(WIN32) || !defined(_WIN32)
+            nanosleep(&time, NULL);        
+#endif
+        }
 
         // Frame calculations
         {
-            int seconds = 2;
-            static int drawCalls = 0;
-            static int polysRendered = 0;
-            static int objectsRendered = 0;
+            enum DataName
+            {
+                drawCalls,
+                polysRendered,
+                objectsRendered,
+                threadsUsed,
+                DataCount
+            };
+
+            static int data[DataCount] = { 0 };
+
+            const  int seconds = 2;
             static double totalElapsed = 0;
             static double processElapsed = 0;
-            static int threadsUsed = 0;
 
             double elapsed = rendAPI()->getTime() - start_time;
 
             processElapsed += Renderer::getProcessTime();            
             totalElapsed += elapsed;
-            polysRendered += rendAPI()->getPolygonCount();
-            objectsRendered  += rendAPI()->getObjectCount();
-            threadsUsed += Renderer::getThreadCount();
+            data[polysRendered]   += rendAPI()->getPolygonCount();
+            data[objectsRendered] += rendAPI()->getObjectCount();
+            data[threadsUsed]     += Renderer::getThreadCount();
 
             if (totalElapsed >= seconds)
             {
@@ -111,19 +163,21 @@ namespace pcs
 
                 commaFormat(fps);
 
-                PS_CORE_INFO("{0} frames passed in {2} second(s) with an average fps of {1} ({2} ms)", frame, fps, seconds, 1.f / fps);
+                PS_CORE_INFO("{0} frames passed in {2} second(s) with an average fps of {1}", frame, fps, seconds, 1.f / fps);
                 PS_CORE_INFO("RAPI: {0}  |  Avg. draw per frame: {2} |  Avg. Polys: {3}  |  Avg. Objs: {4}  |  Avg. Process Time: {5} ms  |  Avg. Threads: {6}", 
-                    settings.getAPIName(settings.api), rendAPI()->getRenderCalls() - drawCalls, (float)(rendAPI()->getRenderCalls() - drawCalls) / (float)frame,
-                    commaFormat((float)polysRendered / (float)frame), commaFormat((float)objectsRendered / (float)frame), (float)processElapsed / (float)frame,
-                    (float)threadsUsed / (float)frame);
+                    settings.getAPIName(settings.api), rendAPI()->getRenderCalls() - data[drawCalls], (float)(rendAPI()->getRenderCalls() - data[drawCalls]) / (float)frame,
+                    commaFormat((float)data[polysRendered] / (float)frame), commaFormat((float)data[objectsRendered] / (float)frame), (float)processElapsed / (float)frame,
+                    (float)data[threadsUsed] / (float)frame);
+                PS_CORE_INFO("{0}\% CPU Usage  |  Memory Usage: {1} mb", Profiler::get().getCPUPercent(), (float)(Profiler::get().getMemoryUsage()) / 10000.f);
 
                 frame = 0;
                 totalElapsed = 0;
                 processElapsed = 0;
-                polysRendered = 0;
-                objectsRendered = 0;
-                threadsUsed = 0;
-                drawCalls = rendAPI()->getRenderCalls();
+                
+                for (int i = 0; i < DataCount; i++)
+                    data[i] = 0;
+
+                data[drawCalls] = rendAPI()->getRenderCalls();
             }
         }
 

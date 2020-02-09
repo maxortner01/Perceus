@@ -5,6 +5,7 @@
 
 namespace pcs
 {
+<<<<<<< HEAD
     int ForwardRenderer::render(RawModel* rawModel, ShaderProgram* shader, Camera* camera, unsigned int count) const
     {
         //static Texture* texture;
@@ -21,6 +22,16 @@ namespace pcs
 
         const char* textures[] = {
             "albedo", "normalTex"
+=======
+    RenderFlag ForwardRenderer::render(RawModel* rawModel, ShaderProgram* shader, Camera* camera, unsigned int count) const
+    {
+        rend::Buffer* vertexBuff = &rawModel->getBuffer(rend::BufferIndex::Indices);
+
+        vertexBuff->bind();
+
+        const char* textures[] = {
+            "texAlbedo", "texNormal"
+>>>>>>> master
         };
 
         shader->use();
@@ -59,6 +70,10 @@ namespace pcs
 
         vertexBuff->unbind();
 
+<<<<<<< HEAD
         return (int)RenderFlag::Good;
+=======
+        return RenderFlag::Good;
+>>>>>>> master
     }
 }

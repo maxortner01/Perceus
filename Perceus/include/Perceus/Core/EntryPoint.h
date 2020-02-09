@@ -9,7 +9,11 @@ extern pcs::Application* pcs::CreateApplication();
 
 int main()
 {
+<<<<<<< HEAD
     pcs::Log::init();
+=======
+    pcs::Log::get().init();
+>>>>>>> master
     
     PS_CORE_DEBUG("Program initiation");
     // Create the application from client implementation

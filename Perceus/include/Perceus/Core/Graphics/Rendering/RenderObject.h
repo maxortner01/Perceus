@@ -2,6 +2,8 @@
 
 #include "RenderAPI.h"
 
+#include "Perceus/Data/Inc.h"
+
 namespace pcs
 {
 namespace rend
@@ -25,23 +27,36 @@ namespace rend
 
         const char* getAPIName(RenderAPIType type) const
         {
-            return (const char *[]){
-                "OpenGL",
-                "DirectX11",
-                "Vulkan"
-            }[type];
+			const char* r[]{
+				"OpenGL",
+				"DirectX11",
+				"Vulkan"
+			};
+
+            return r[type];
         }
     };
+<<<<<<< HEAD
 
     /**
      * @brief Class for retreiving the currently selected render API.
      */
     class RenderObject
+=======
+    /**
+     * @brief Class for retreiving the currently selected render API.
+     */
+    class PERC_API RenderObject
+>>>>>>> master
     {
     protected:
         /// Used for keeping track of the currently selected render API.
         static RenderSettings settings;
 
+<<<<<<< HEAD
+=======
+    public:
+>>>>>>> master
         /**
          * @brief Holds and retreives the currently selected render API interface.
          * 

@@ -41,9 +41,13 @@ namespace pcs
      */
     template<typename T>
     class Transformable2D : public Transformable<Vec2<T>>
+<<<<<<< HEAD
     {
 
     };
+=======
+    {    };
+>>>>>>> master
 
     /**
      * @brief Class that handles 3-Dimensional Transformations
@@ -52,7 +56,11 @@ namespace pcs
      */
     template<typename T>
     class Transformable3D : public Transformable<Vec3<T>>
+<<<<<<< HEAD
     {
 
     };
+=======
+    {    };
+>>>>>>> master
 }

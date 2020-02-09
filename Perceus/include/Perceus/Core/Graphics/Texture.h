@@ -6,22 +6,61 @@
 
 namespace pcs
 {
+<<<<<<< HEAD
     class Texture : 
+=======
+    /**
+     * @brief Represents a texture
+     */
+    class PERC_API Texture : 
+>>>>>>> master
         public Data::ObjectID<Texture>, public rend::RenderObject
     {
+        unsigned int current_layer;
+
     public:
+        /**
+         * @brief Constructs a new Texture object.
+         */
         Texture();
+        /**
+         * @brief Constructs a new Texture object and loads from a file location.
+         * 
+         * @param location Location of file to load from
+         */
         Texture(const char* location);
+        /**
+         * @brief Destroys the Texture object
+         */
         ~Texture();
 
+        /**
+         * @brief Destroys the Texture object
+         */
         void destroy();
 
-        void bind(unsigned int layer = 0) const;
-        void unbind(unsigned int layer = 0) const;
+        /**
+         * @brief Binds the texture at specified layer.
+         * 
+         * @param layer Layer on which to bind this texture
+         */
+        void bind(unsigned int layer = 0);
+        /**
+         * @brief Unbinds the Texture object
+         */
+        void unbind() const;
 
+        /**
+         * @brief Loads the image from a given file.
+         * 
+         * @param location Location of the image file
+         */
         void loadFromFile(const char* location);
     };
 
+    /**
+     * @brief Types of textures that go into a RawModel.
+     */
     enum class TextureTypes
     {
         Albedo,
@@ -29,14 +68,22 @@ namespace pcs
         Count
     };
 
+    /**
+     * @brief Array of textures that follows TextureTypes.
+     */
     union TextureArray
     {
+		TextureArray() {
+			for (int i = 0; i < (int)TextureTypes::Count; i++)
+				textures[i] = nullptr;
+		}
+
         Texture* textures[(int)TextureTypes::Count];
 
         struct 
         {
-            Texture* albedo = nullptr;
-            Texture* normal = nullptr;
+            Texture* albedo;
+            Texture* normal;
         };
     };
 }
